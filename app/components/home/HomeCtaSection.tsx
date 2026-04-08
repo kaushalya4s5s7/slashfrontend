@@ -16,7 +16,7 @@ export function HomeCtaSection() {
           <span className="block text-orange-300">competitive governance.</span>
         </h2>
 
-        <p className="mt-5 max-w-2xl text-base text-zinc-300 sm:text-lg">
+        <p className="mt-5 max-w-2xl text-base text-zinc-300 sm:text-lg font-urbanist ">
           Start with one transaction. Let autonomous strategy competition do the hard part.
         </p>
 

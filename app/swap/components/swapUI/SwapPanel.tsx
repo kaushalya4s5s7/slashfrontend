@@ -48,14 +48,19 @@ export function SwapPanel() {
   };
 
   return (
-    <div className="mx-auto w-full max-w-2xl mt-10 px-4">
-      <div className="rounded-[32px] border border-zinc-800 bg-black/80 p-4 shadow-[0_0_40px_rgba(0,0,0,0.4)] backdrop-blur-sm sm:p-5">
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-zinc-100">Swap</h2>
-          <div className="text-xs text-zinc-400">Implied APY: {formatBps(impliedRateBps)}</div>
+    <div className="mx-auto w-full max-w-3xl">
+      <div className="rounded-[2rem] border border-zinc-800/80 bg-zinc-900/60 p-5 shadow-[0_30px_80px_-35px_rgba(0,0,0,0.95)] backdrop-blur-xl sm:p-6">
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 className="text-xl font-semibold tracking-tight text-zinc-100">Swap exposure</h2>
+            <p className="font-urbanist text-sm text-zinc-400">Shift between fixed and variable yield positions.</p>
+          </div>
+          <div className="rounded-full border border-zinc-700/80 bg-black/25 px-3 py-1 text-xs text-zinc-300">
+            Implied APY: <span className="text-zinc-100">{formatBps(impliedRateBps)}</span>
+          </div>
         </div>
 
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
           <Tabs
             value={mode}
             onChange={(next) => setMode(next as Mode)}
@@ -64,7 +69,7 @@ export function SwapPanel() {
               { value: "STAKING", label: "Staking" },
             ]}
           />
-          <label className="inline-flex items-center gap-2 text-xs text-zinc-400">
+          <label className="font-urbanist inline-flex items-center gap-2 text-xs text-zinc-400">
             Slippage
             <input
               className="w-16 rounded-md border border-zinc-700 bg-zinc-900 px-2 py-1 text-right text-xs text-zinc-100 outline-none"
@@ -79,12 +84,12 @@ export function SwapPanel() {
           </label>
         </div>
 
-        <div className="relative space-y-2">
-          <div className="rounded-[28px] border border-zinc-800 bg-zinc-950/90 p-5">
-            <p className="mb-3 text-sm text-zinc-400">Sell</p>
+        <div className="relative space-y-3">
+          <div className="rounded-[1.6rem] border border-zinc-800/80 bg-zinc-950/85 p-5">
+            <p className="font-urbanist mb-3 text-xs uppercase tracking-[0.16em] text-zinc-500">Sell</p>
             <div className="flex items-end justify-between gap-3">
               <input
-                className="w-full bg-transparent text-5xl leading-none text-zinc-200 outline-none placeholder:text-zinc-600"
+                className="w-full bg-transparent text-4xl leading-none text-zinc-200 outline-none placeholder:text-zinc-600 sm:text-5xl"
                 type="number"
                 min="0"
                 step="0.0001"
@@ -95,7 +100,7 @@ export function SwapPanel() {
               <button
                 type="button"
                 onClick={onToggleDirection}
-                className="rounded-full border border-zinc-700 bg-zinc-900 px-4 py-2 text-sm font-semibold text-zinc-200"
+                className="rounded-full border border-zinc-700/80 bg-zinc-900 px-4 py-2 text-sm font-semibold text-zinc-200"
               >
                 {sellToken}
               </button>
@@ -108,18 +113,18 @@ export function SwapPanel() {
               onClick={onToggleDirection}
               className="rounded-2xl border border-zinc-700 bg-zinc-900 p-3 text-zinc-100 shadow-lg"
             >
-              <ArrowDown className="h-6 w-6" />
+              <ArrowDown className="h-5 w-5" />
             </button>
           </div>
 
-          <div className="rounded-[28px] border border-zinc-800 bg-zinc-900/60 p-5 pt-7">
-            <p className="mb-3 text-sm text-zinc-400">Buy</p>
+          <div className="rounded-[1.6rem] border border-zinc-800/80 bg-zinc-900/65 p-5 pt-7">
+            <p className="font-urbanist mb-3 text-xs uppercase tracking-[0.16em] text-zinc-500">Buy</p>
             <div className="flex items-end justify-between gap-3">
-              <div className="text-5xl leading-none text-zinc-300">{formatToken(expectedOut, 18, 4)}</div>
+              <div className="text-4xl leading-none text-zinc-200 sm:text-5xl">{formatToken(expectedOut, 18, 4)}</div>
               <button
                 type="button"
                 onClick={onToggleDirection}
-                className="rounded-full border border-zinc-700 bg-zinc-900 px-4 py-2 text-sm font-semibold text-zinc-200"
+                className="rounded-full border border-zinc-700/80 bg-zinc-900 px-4 py-2 text-sm font-semibold text-zinc-200"
               >
                 {buyToken}
               </button>
@@ -128,15 +133,15 @@ export function SwapPanel() {
         </div>
 
         <Button
-          className="mt-4 h-14 w-full rounded-2xl bg-gradient-to-r from-orange-600 to-orange-500 text-xl font-semibold text-white"
+          className="mt-5 h-12 w-full rounded-xl bg-gradient-to-r from-orange-500 to-orange-400 text-base font-semibold text-zinc-950"
           onClick={onAction}
           loading={isPending}
           disabled={!isAuthenticated}
         >
-          {!isAuthenticated ? "Sign in to continue" : needsApproval ? `Approve ${sellToken}` : "Get started"}
+          {!isAuthenticated ? "Sign in to continue" : needsApproval ? `Approve ${sellToken}` : "Execute swap"}
         </Button>
 
-        <div className="mt-3 space-y-1 text-xs text-zinc-400">
+        <div className="font-urbanist mt-4 space-y-1.5 text-xs text-zinc-400">
           <p>Route: {direction === "SY_TO_PT" ? "Lock fixed yield (SY → PT)" : "Go variable yield (PT → SY)"}</p>
           <p>Min received: {formatToken(minOut)} {buyToken}</p>
           {approveHash ? <p>Approve tx: <TxHashLink hash={approveHash} /></p> : null}

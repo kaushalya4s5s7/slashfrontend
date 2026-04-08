@@ -128,24 +128,26 @@ export function DepositPanel() {
   const isBusy = isPending || isAutoWritePending;
 
   return (
-    <div className="grid gap-4">
-      <Card>
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Deposit XTZ</h2>
+    <div className="grid gap-5 lg:grid-cols-[1.25fr_0.75fr]">
+      <Card className="rounded-3xl border-zinc-800/80 bg-zinc-900/60 p-6 backdrop-blur-xl">
+        <div className="mb-5 flex items-start justify-between gap-3">
+          <div>
+            <h2 className="text-xl font-semibold tracking-tight text-zinc-100">Deposit native XTZ</h2>
+            <p className="font-urbanist mt-1 text-sm text-zinc-400">Mint slashXTZ shares in delegation or staking mode.</p>
+          </div>
           <Badge mode={mode} />
         </div>
-        <p className="mb-4 text-sm text-zinc-400">Select vault mode and deposit native XTZ to mint slashXTZ shares.</p>
 
         <Tabs
           value={mode}
           onChange={(next) => setMode(next as Mode)}
           tabs={[
-            { value: "DELEGATION", label: "Delegation (~6%)" },
-            { value: "STAKING", label: "Staking (~18%)" },
+            { value: "DELEGATION", label: "Delegation" },
+            { value: "STAKING", label: "Staking" },
           ]}
         />
 
-        <div className="mt-4 grid gap-3">
+        <div className="mt-5 grid gap-4">
           <Input
             label="Amount"
             suffix="XTZ"
@@ -154,53 +156,48 @@ export function DepositPanel() {
             step="0.001"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
+            className="h-11 rounded-xl"
           />
-          <p className="text-xs text-zinc-400">Current oracle APY: {formatBps(apyBps)}</p>
-          <p className="text-xs text-zinc-500">Preview: you receive ≈ {amount || "0"} {mode === "DELEGATION" ? "slashDXTZ" : "slashSXTZ"}</p>
-          <label className="mt-1 inline-flex items-center gap-2 text-xs text-zinc-300">
+
+          <div className="grid gap-2 rounded-2xl border border-zinc-800/80 bg-black/20 p-4 text-sm text-zinc-300 sm:grid-cols-2">
+            <p>Oracle APY: <span className="text-zinc-100">{formatBps(apyBps)}</span></p>
+            <p>Preview minted: <span className="text-zinc-100">≈ {amount || "0"} {mode === "DELEGATION" ? "slashDXTZ" : "slashSXTZ"}</span></p>
+          </div>
+
+          <label className="font-urbanist inline-flex items-center gap-2 text-xs text-zinc-300">
             <input
               type="checkbox"
               checked={autoSplitEnabled}
               onChange={(e) => setAutoSplitEnabled(e.target.checked)}
             />
-            Auto-split after deposit (runs approve + splitter deposit with wallet prompts)
+            Auto-split after deposit (approve + splitter flow)
           </label>
         </div>
       </Card>
 
       <RequireSiweAuth>
-        <Card>
-          <div className="flex items-center justify-between">
+        <Card className="rounded-3xl border-zinc-800/80 bg-zinc-900/60 p-6 backdrop-blur-xl">
+          <div className="space-y-4">
             <div>
-              <p className="text-sm font-medium">Confirm deposit</p>
-              <p className="text-xs text-zinc-400">Transaction executes `vault.deposit()` with native XTZ.</p>
+              <p className="text-base font-semibold text-zinc-100">Execution</p>
+              <p className="font-urbanist text-sm text-zinc-400">Run `vault.deposit()` and optionally continue with auto split.</p>
             </div>
-            <Button onClick={onDeposit} loading={isBusy}>
-              Deposit
+
+            <Button onClick={onDeposit} loading={isBusy} className="h-11 w-full rounded-xl bg-gradient-to-r from-orange-500 to-orange-400 text-zinc-950">
+              Confirm deposit
             </Button>
+
+            <div className="space-y-1.5 text-xs text-zinc-400">
+              {depositHash ? <p>Deposit tx: <TxHashLink hash={depositHash} /></p> : null}
+              {approveHash ? <p>Approve tx: <TxHashLink hash={approveHash} /></p> : null}
+              {splitHash ? <p>Split tx: <TxHashLink hash={splitHash} /></p> : null}
+              {flowStatus ? <p className="text-zinc-200">{flowStatus}</p> : null}
+              {flowError ? <p className="text-red-400">{flowError}</p> : null}
+              {depositReceipt.data?.status === "success" && !autoSplitEnabled ? (
+                <p className="text-emerald-400">Deposit confirmed on-chain.</p>
+              ) : null}
+            </div>
           </div>
-          {depositHash ? (
-            <p className="mt-3 text-xs text-zinc-400">
-              Deposit tx: <TxHashLink hash={depositHash} />
-            </p>
-          ) : null}
-          {approveHash ? (
-            <p className="mt-1 text-xs text-zinc-400">
-              Approve tx: <TxHashLink hash={approveHash} />
-            </p>
-          ) : null}
-          {splitHash ? (
-            <p className="mt-1 text-xs text-zinc-400">
-              Split tx: <TxHashLink hash={splitHash} />
-            </p>
-          ) : null}
-
-          {flowStatus ? <p className="mt-2 text-xs text-white-300">{flowStatus}</p> : null}
-          {flowError ? <p className="mt-2 text-xs text-red-400">{flowError}</p> : null}
-
-          {depositReceipt.data?.status === "success" && !autoSplitEnabled ? (
-            <p className="mt-2 text-xs text-emerald-400">Deposit confirmed on-chain.</p>
-          ) : null}
         </Card>
       </RequireSiweAuth>
     </div>

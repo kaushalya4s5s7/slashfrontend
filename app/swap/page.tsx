@@ -4,11 +4,14 @@ import { NetworkGuard } from "@/shared/components/NetworkGuard";
 
 export default function SwapPage() {
   return (
-    <section className="space-y-4 p-8">
-      <PageHeader title="Swap" subtitle="Trade PT against slashXTZ using time-decay AMM pools." />
-      <NetworkGuard>
-        <SwapPanel />
-      </NetworkGuard>
+    <section className="relative h-full overflow-y-auto">
+      <div className="pointer-events-none absolute inset-0 opacity-40 [background:radial-gradient(circle_at_16%_12%,rgba(56,189,248,0.2),transparent_34%),radial-gradient(circle_at_82%_86%,rgba(255,255,255,0.08),transparent_30%)]" />
+      <div className="relative mx-auto w-full max-w-6xl space-y-8 px-4 py-6 sm:px-6 lg:px-10 lg:py-10">
+        <PageHeader title="Swap" subtitle="Move between fixed-yield and variable-yield exposure through protocol-native PT and slashXTZ pools." />
+        <NetworkGuard>
+          <SwapPanel />
+        </NetworkGuard>
+      </div>
     </section>
   );
 }
