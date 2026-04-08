@@ -1,7 +1,9 @@
 import Link from "next/link";
+import Image from "next/image";
 import GradientBarsBackground from "@/components/ui/gradient-bars-background";
 import { ArrowRight, BarChart3 } from "lucide-react";
 import { HomeFeaturesSection } from "./components/home/HomeFeaturesSection";
+import { HomeHowItWorksSection } from "./components/home/HomeHowItWorksSection";
 import { HomeGovernanceProofSection } from "./components/home/HomeGovernanceProofSection";
 import { HomeCtaSection } from "./components/home/HomeCtaSection";
 import { HomeFooterSection } from "./components/home/HomeFooterSection";
@@ -19,8 +21,9 @@ export default function Home() {
         >
           <div className="flex h-full min-h-0 w-full flex-col overflow-hidden ">
             <section className="grid h-full min-h-0 place-content-center gap-5 px-4 py-2 text-center sm:px-6">
+             
               <h1 className="max-w-4xl text-6xl font-bold tracking-tight text-zinc-100 sm:text-7xl lg:text-8xl">
-                <span className="font-cinzel bg-gradient-to-b from-white to-black/5 bg-clip-text text-transparent">Govern Yield.</span>
+                <span className="font-cinzel bg-gradient-to-t from-white to-black/5 bg-clip-text text-transparent">Govern Yield.</span>
                 
               </h1>
 
@@ -50,6 +53,7 @@ export default function Home() {
       </section>
 
       <HomeFeaturesSection />
+      <HomeHowItWorksSection />
       <HomeGovernanceProofSection />
       <HomeCtaSection />
       <HomeFooterSection />

@@ -11,26 +11,20 @@ export function HomeCtaSection() {
           Main Action
         </div>
 
-        <h2 className="mt-6 max-w-4xl text-5xl font-semibold tracking-tight text-white sm:text-6xl">
+        <h2 className="font-urbanist mt-6 max-w-4xl text-5xl font-semibold tracking-tight text-white sm:text-6xl">
           Your capital deserves
           <span className="block text-orange-300">competitive governance.</span>
         </h2>
 
-        <p className="mt-5 max-w-2xl text-base text-zinc-300 sm:text-lg font-urbanist ">
+        <p className="font-urbanist mt-5 max-w-2xl text-base text-zinc-300 sm:text-lg">
           Start with one transaction. Let autonomous strategy competition do the hard part.
         </p>
 
-        <div className="mt-9 flex flex-wrap justify-center gap-3 font-urbanist ">
-          <Link
-            href="/deposit"
-            className="group inline-flex items-center gap-2  bg-orange-500 px-7 py-3 text-base font-semibold text-black transition hover:bg-orange-400"
-          >
-            Launch App
-            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-          </Link>
+        <div className="mt-9 flex flex-wrap justify-center gap-3 font-urbanist">
+          
           <Link
             href="/swap"
-            className="inline-flex items-center  border border-zinc-700 bg-black/50 px-7 py-3 text-base font-semibold text-zinc-100 transition hover:border-zinc-600 hover:bg-zinc-900"
+            className="inline-flex items-center border border-zinc-700 bg-black px-7 py-3 font-semibold text-white transition hover:border-zinc-600 hover:bg-zinc-900"
           >
             Explore Markets
           </Link>

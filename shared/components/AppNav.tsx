@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
+import Image from "next/image";
 import { ConnectButton, useConnectModal } from "@rainbow-me/rainbowkit";
 import { Button } from "@/shared/components/ui/Button";
 import { useSiweAuth } from "@/shared/context/siwe-auth-context";
@@ -71,11 +72,19 @@ export function AppNav() {
   }, [autoSignAttempted, isAuthenticated, isConnected, isSigning, router, signIn, startFlow]);
 
   return (
-    <header className="overflow-x-hidden border-b border-zinc-800 bg-zinc-950/95 backdrop-blur font-urbanist ">
+    <header className="overflow-x-hidden  border-zinc-800 bg-zinc-950/95 backdrop-blur font-urbanist ">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-8">
+         
           <Link href="/" className="text-sm font-semibold text-zinc-100">
-            SlashMarket
+            <Image
+                            src="/ubon-removebg-preview.svg"
+                            alt="Slash Market logo"
+                            width={100}
+                            height={70}
+                            priority
+                            className="mx-auto "
+                          />
           </Link>
           <nav className="hidden items-center gap-1 sm:flex">
             {links.map((link) => {
