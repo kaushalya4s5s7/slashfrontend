@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Urbanist } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { Providers } from "./providers";
 import { AppNav } from "@/shared/components/AppNav";
@@ -20,6 +21,11 @@ export const urbanist = Urbanist({
   weight: ["400", "500", "600", "700"],
 });
 
+export const cinzelDecorative = localFont({
+  src: "../public/CinzelDecorative-Bold.otf",
+  variable: "--font-cinzel-decorative",
+});
+
 export const metadata: Metadata = {
   title: "SlashMarket",
   description: "Non-custodial yield marketplace on Etherlink Shadownet",
@@ -33,7 +39,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${urbanist.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${urbanist.variable} ${cinzelDecorative.variable} h-full antialiased`}
     >
       <body className="h-full bg-zinc-950 text-zinc-100">
         <Providers>

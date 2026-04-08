@@ -14,6 +14,7 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-urbanist: var(--font-urbanist-next);
+  --font-cinzel: var(--font-cinzel-decorative);
 }
 
 body {

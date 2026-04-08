@@ -11,7 +11,6 @@ import { useDeposit } from "@/app/deposit/components/depositService/useDeposit";
 import { Mode } from "@/shared/types/contracts";
 import { formatBps } from "@/shared/utils/format";
 import { RequireSiweAuth } from "@/shared/components/RequireSiweAuth";
-import { TxHashLink } from "@/shared/components/ui/TxHashLink";
 import { useDepositMode } from "@/app/deposit/hooks/useDepositMode";
 import { ADDRESSES } from "@/shared/hooks/useContractAddresses";
 import { ERC20_ABI, SPLITTER_ABI } from "@/shared/lib/abis";
@@ -128,7 +127,7 @@ export function DepositPanel() {
   const isBusy = isPending || isAutoWritePending;
 
   return (
-    <div className="grid gap-5 lg:grid-cols-[1.25fr_0.75fr]">
+    <div className="grid gap-5">
       <Card className="rounded-3xl border-zinc-800/80 bg-zinc-900/60 p-6 backdrop-blur-xl">
         <div className="mb-5 flex items-start justify-between gap-3">
           <div>
@@ -176,29 +175,15 @@ export function DepositPanel() {
       </Card>
 
       <RequireSiweAuth>
-        <Card className="rounded-3xl border-zinc-800/80 bg-zinc-900/60 p-6 backdrop-blur-xl">
-          <div className="space-y-4">
-            <div>
-              <p className="text-base font-semibold text-zinc-100">Execution</p>
-              <p className="font-urbanist text-sm text-zinc-400">Run `vault.deposit()` and optionally continue with auto split.</p>
-            </div>
-
-            <Button onClick={onDeposit} loading={isBusy} className="h-11 w-full rounded-xl bg-gradient-to-r from-orange-500 to-orange-400 text-zinc-950">
-              Confirm deposit
-            </Button>
-
-            <div className="space-y-1.5 text-xs text-zinc-400">
-              {depositHash ? <p>Deposit tx: <TxHashLink hash={depositHash} /></p> : null}
-              {approveHash ? <p>Approve tx: <TxHashLink hash={approveHash} /></p> : null}
-              {splitHash ? <p>Split tx: <TxHashLink hash={splitHash} /></p> : null}
-              {flowStatus ? <p className="text-zinc-200">{flowStatus}</p> : null}
-              {flowError ? <p className="text-red-400">{flowError}</p> : null}
-              {depositReceipt.data?.status === "success" && !autoSplitEnabled ? (
-                <p className="text-emerald-400">Deposit confirmed on-chain.</p>
-              ) : null}
-            </div>
-          </div>
-        </Card>
+        <div className="space-y-2">
+          <Button onClick={onDeposit} loading={isBusy} className="h-11 w-full rounded-none bg-white text-zinc-950">
+            Deposit
+          </Button>
+          {flowError ? <p className="text-xs text-red-400">{flowError}</p> : null}
+          {depositReceipt.data?.status === "success" && !autoSplitEnabled ? (
+            <p className="text-xs text-emerald-400">Deposit confirmed.</p>
+          ) : null}
+        </div>
       </RequireSiweAuth>
     </div>
   );

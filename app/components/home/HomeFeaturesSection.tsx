@@ -33,7 +33,7 @@ const features = [
 
 export function HomeFeaturesSection() {
   return (
-    <section className="relative min-h-[320svh] snap-start overflow-clip bg-zinc-950">
+    <section className="relative min-h-[320svh] snap-start overflow-clip bg-zinc-950 font-urbanist">
       <div className="pointer-events-none absolute inset-0 opacity-50 [background:radial-gradient(circle_at_15%_15%,rgba(255,94,0,0.22),transparent_34%),radial-gradient(circle_at_82%_18%,rgba(168,85,247,0.16),transparent_30%),radial-gradient(circle_at_75%_82%,rgba(255,255,255,0.08),transparent_35%)]" />
       <div className="relative mx-auto grid min-h-[320svh] w-full max-w-7xl grid-cols-1 gap-10 px-4 py-20 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16 lg:px-10">
         <div className="lg:sticky lg:top-24 lg:h-fit">
@@ -63,12 +63,12 @@ export function HomeFeaturesSection() {
                 style={{ top: `${92 + index * 24}px` }}
                 className="group sticky"
               >
-                <div className="relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-gradient-to-b from-zinc-900/90 to-zinc-950/95 p-7 shadow-[0_30px_80px_-35px_rgba(0,0,0,0.95)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-orange-300/40 sm:p-8">
+                <div className="relative overflow-hidden  border border-white/10 bg-gradient-to-b from-zinc-900/90 to-zinc-950/95 p-7 shadow-[0_30px_80px_-35px_rgba(0,0,0,0.95)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-orange-300/40 sm:p-8">
                   <div className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${item.glow} opacity-90`} />
-                  <div className="pointer-events-none absolute inset-0 rounded-[1.75rem] ring-1 ring-inset ring-white/10" />
+                  <div className="pointer-events-none absolute inset-0  ring-1 ring-inset ring-white/10" />
 
                   <div className="relative flex items-start justify-between gap-4">
-                    <div className="inline-flex rounded-2xl border border-white/15 bg-black/35 p-3.5 shadow-lg shadow-black/40">
+                    <div className="inline-flex  border border-white/15 bg-black/35 p-3.5 shadow-lg shadow-black/40">
                       <Icon className="h-5 w-5 text-orange-200" />
                     </div>
                     <span className="font-urbanist rounded-full border border-white/15 bg-black/35 px-3 py-1 text-[11px] uppercase tracking-[0.18em] text-zinc-300">

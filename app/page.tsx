@@ -20,10 +20,8 @@ export default function Home() {
           <div className="flex h-full min-h-0 w-full flex-col overflow-hidden ">
             <section className="grid h-full min-h-0 place-content-center gap-5 px-4 py-2 text-center sm:px-6">
               <h1 className="max-w-4xl text-6xl font-bold tracking-tight text-zinc-100 sm:text-7xl lg:text-8xl">
-                Govern Yield.
-                <span className="block bg-gradient-to-b from-white to-black/5 bg-clip-text text-transparent">
-                  Verify Every Move.
-                </span>
+                <span className="font-cinzel">Govern Yield.</span>
+                
               </h1>
 
               <p className="font-urbanist mx-auto max-w-2xl text-base text-zinc-300 sm:text-lg">
