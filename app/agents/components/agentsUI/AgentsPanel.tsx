@@ -39,7 +39,7 @@ export function AgentsPanel() {
               <button
                 type="button"
                 onClick={() => setAgentsOpen((prev) => !prev)}
-                className="font-urbanist rounded-lg border border-zinc-700 bg-zinc-900/80 px-3 py-1.5 text-xs text-zinc-200"
+                className="font-urbanist rounded-lg border border-zinc-700 bg-zinc-900/80 px-3 py-1.5 text-xs text-zinc-200 cursor-pointer hover:bg-zinc/10"
               >
                 Agents
               </button>
@@ -62,7 +62,7 @@ export function AgentsPanel() {
                             <button
                               type="button"
                               onClick={() => onCopyAddress(agent.address)}
-                              className="font-urbanist rounded border border-zinc-700 px-2 py-0.5 text-[11px] text-zinc-200"
+                              className="font-urbanist rounded border border-zinc-700 px-2 py-0.5 text-[11px] text-zinc-200 cursor-pointer"
                             >
                               {copiedAddress === agent.address ? "Copied" : "Copy"}
                             </button>
