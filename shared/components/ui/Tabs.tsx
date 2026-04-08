@@ -19,7 +19,7 @@ export function Tabs({
             type="button"
             onClick={() => onChange(tab.value)}
             className={`rounded-md px-3 py-1.5 text-xs font-medium transition ${
-              active ? "bg-white-500 text-zinc-950" : "text-zinc-300 hover:bg-zinc-800"
+              active ? "bg-white/90 text-zinc-950" : "text-zinc-300  hover:bg-zinc-800"
             }`}
           >
             {tab.label}

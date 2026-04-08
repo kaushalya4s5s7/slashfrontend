@@ -7,7 +7,7 @@ import { useAgents } from "@/app/agents/components/agentsService/useAgents";
 import { useRoundCountdown } from "@/app/agents/hooks/useRoundCountdown";
 
 export function AgentsPanel() {
-  const { round, timeLeft, apy, winnerRound, winner, winnerAgent } = useAgents();
+  const { round, timeLeft, apy, winnerRound, winner, winnerReads, winnerAgent } = useAgents();
   const countdown = useRoundCountdown(timeLeft.data);
 
   return (
@@ -34,17 +34,21 @@ export function AgentsPanel() {
       </Card>
 
       <Card className="rounded-3xl border-zinc-800/80 bg-zinc-900/60 p-6 backdrop-blur-xl">
-        <h3 className="text-lg font-semibold tracking-tight text-zinc-100">Last Winner (Round {String(winnerRound)})</h3>
-        {!winner.data ? (
-          <p className="font-urbanist mt-3 text-sm text-zinc-400">No winner data yet.</p>
+        <h3 className="text-lg font-semibold tracking-tight text-zinc-100">
+          Last Winner{winnerRound > 0n ? ` (Round ${String(winnerRound)})` : ""}
+        </h3>
+        {winnerReads.isLoading ? (
+          <p className="font-urbanist mt-3 text-sm text-zinc-400">Loading winner data...</p>
+        ) : !winner ? (
+          <p className="font-urbanist mt-3 text-sm text-zinc-400">No settled winner found in recent rounds.</p>
         ) : (
           <div className="mt-4 grid gap-2 text-sm">
-            <p className="rounded-lg border border-zinc-800/70 bg-black/20 px-3 py-2 text-zinc-300">Winner: <span className="text-zinc-100">{shorten(winner.data.winner)}</span></p>
-            <p className="rounded-lg border border-zinc-800/70 bg-black/20 px-3 py-2 text-zinc-300">Baker: <span className="text-zinc-100">{winner.data.baker}</span></p>
-            <p className="rounded-lg border border-zinc-800/70 bg-black/20 px-3 py-2 text-zinc-300">Predicted: <span className="text-zinc-100">{formatBps(winner.data.predictedYieldBps)}</span></p>
-            <p className="rounded-lg border border-zinc-800/70 bg-black/20 px-3 py-2 text-zinc-300">Actual: <span className="text-zinc-100">{formatBps(winner.data.actualYieldBps)}</span></p>
-            <p className="rounded-lg border border-zinc-800/70 bg-black/20 px-3 py-2 text-zinc-300">Abs error: <span className="text-zinc-100">{String(winner.data.absError)} bps</span></p>
-            <p className="rounded-lg border border-zinc-800/70 bg-black/20 px-3 py-2 text-zinc-300">Reward: <span className="text-zinc-100">{formatToken(winner.data.reward)} XTZ</span></p>
+            <p className="rounded-lg border border-zinc-800/70 bg-black/20 px-3 py-2 text-zinc-300">Winner: <span className="text-zinc-100">{shorten(winner.winner)}</span></p>
+            <p className="rounded-lg border border-zinc-800/70 bg-black/20 px-3 py-2 text-zinc-300">Baker: <span className="text-zinc-100">{winner.baker}</span></p>
+            <p className="rounded-lg border border-zinc-800/70 bg-black/20 px-3 py-2 text-zinc-300">Predicted: <span className="text-zinc-100">{formatBps(winner.predictedYieldBps)}</span></p>
+            <p className="rounded-lg border border-zinc-800/70 bg-black/20 px-3 py-2 text-zinc-300">Actual: <span className="text-zinc-100">{formatBps(winner.actualYieldBps)}</span></p>
+            <p className="rounded-lg border border-zinc-800/70 bg-black/20 px-3 py-2 text-zinc-300">Abs error: <span className="text-zinc-100">{String(winner.absError)} bps</span></p>
+            <p className="rounded-lg border border-zinc-800/70 bg-black/20 px-3 py-2 text-zinc-300">Reward: <span className="text-zinc-100">{formatToken(winner.reward)} XTZ</span></p>
           </div>
         )}
       </Card>

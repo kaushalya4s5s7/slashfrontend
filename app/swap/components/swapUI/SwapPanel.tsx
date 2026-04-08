@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useWaitForTransactionReceipt } from "wagmi";
 import { ArrowDown } from "lucide-react";
 import { Tabs } from "@/shared/components/ui/Tabs";
@@ -11,17 +11,27 @@ import { SwapDirection, useSwap } from "@/app/swap/components/swapService/useSwa
 import { TxHashLink } from "@/shared/components/ui/TxHashLink";
 import { useSwapState } from "@/app/swap/hooks/useSwapState";
 import { useSiweAuth } from "@/shared/context/siwe-auth-context";
+import { Area, AreaChart, ChartTooltip, Grid, XAxis, YAxis } from "@/components/ui/area-chart";
+
+type LiquidityPoint = {
+  date: Date;
+  sy: number;
+  pt: number;
+  total: number;
+};
 
 export function SwapPanel() {
   const { mode, setMode, direction, setDirection, amount, setAmount } = useSwapState();
   const [slippage, setSlippage] = useState("0.5");
+  const [showLiquidity, setShowLiquidity] = useState(false);
+  const [liquiditySeries, setLiquiditySeries] = useState<LiquidityPoint[]>([]);
   const [approveHash, setApproveHash] = useState<`0x${string}` | undefined>();
   const [swapHash, setSwapHash] = useState<`0x${string}` | undefined>();
   const [actionError, setActionError] = useState<string | null>(null);
 
   const { isAuthenticated } = useSiweAuth();
 
-  const { impliedRateBps, expectedOut, minOut, approve, swap, isPending, needsApproval } = useSwap(mode, direction, amount, slippage);
+  const { impliedRateBps, expectedOut, minOut, approve, swap, isPending, needsApproval, ptReserve, syReserve } = useSwap(mode, direction, amount, slippage);
 
   const swapReceipt = useWaitForTransactionReceipt({ hash: swapHash, query: { enabled: Boolean(swapHash) } });
 
@@ -47,8 +57,27 @@ export function SwapPanel() {
     }
   };
 
+  useEffect(() => {
+    const sy = Number(syReserve) / 1e18;
+    const pt = Number(ptReserve) / 1e18;
+    const total = sy + pt;
+
+    setLiquiditySeries((prev) => {
+      const next: LiquidityPoint = { date: new Date(), sy, pt, total };
+      const deduped = prev.filter((entry) => entry.date.getTime() !== next.date.getTime());
+      return [...deduped, next].slice(-24);
+    });
+  }, [syReserve, ptReserve, mode]);
+
+  const latestLiquidity = useMemo(() => {
+    if (liquiditySeries.length === 0) {
+      return { sy: 0, pt: 0, total: 0 };
+    }
+    return liquiditySeries[liquiditySeries.length - 1] ?? { sy: 0, pt: 0, total: 0 };
+  }, [liquiditySeries]);
+
   return (
-    <div className="mx-auto w-full max-w-3xl">
+    <div className="mx-auto w-full max-w-2xl">
       <div className="rounded-[2rem] border border-zinc-800/80 bg-zinc-900/60 p-5 shadow-[0_30px_80px_-35px_rgba(0,0,0,0.95)] backdrop-blur-xl sm:p-6">
         <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
           <div>
@@ -133,7 +162,7 @@ export function SwapPanel() {
         </div>
 
         <Button
-          className="mt-5 h-12 w-full rounded-xl bg-gradient-to-r from-orange-500 to-orange-400 text-base font-semibold text-zinc-950"
+          className="mt-5 h-12 w-full  text-base font-semibold text-zinc-950"
           onClick={onAction}
           loading={isPending}
           disabled={!isAuthenticated}
@@ -149,6 +178,37 @@ export function SwapPanel() {
           {actionError ? <p className="text-red-400">{actionError}</p> : null}
           {swapReceipt.data?.status === "success" ? <p className="text-emerald-400">Swap confirmed on-chain.</p> : null}
         </div>
+
+        <button
+          type="button"
+          className="mt-5 text-sm font-medium text-zinc-300 underline-offset-4 hover:text-zinc-100 hover:underline"
+          onClick={() => setShowLiquidity((prev) => !prev)}
+        >
+          View liquidity
+        </button>
+
+        {showLiquidity ? (
+          <div className="mt-4 rounded-2xl border border-zinc-800/80 bg-black/20 p-4">
+            <div className="mb-3 flex items-center justify-between">
+              <p className="text-sm font-semibold text-zinc-100">AMM Liquidity</p>
+              <p className="font-urbanist text-xs text-zinc-400">{mode} pool</p>
+            </div>
+            <AreaChart data={liquiditySeries.length > 1 ? liquiditySeries : [{ date: new Date(Date.now() - 60_000), sy: latestLiquidity.sy, pt: latestLiquidity.pt, total: latestLiquidity.total }, { date: new Date(), sy: latestLiquidity.sy, pt: latestLiquidity.pt, total: latestLiquidity.total }]} margin={{ left: 46, right: 16, top: 18, bottom: 32 }} aspectRatio="2.4 / 1">
+              <Grid horizontal />
+              <Area dataKey="total" fill="var(--chart-line-primary)" stroke="var(--chart-line-primary)" fillOpacity={0.2} strokeWidth={2} />
+              <Area dataKey="sy" fill="var(--chart-line-secondary)" stroke="var(--chart-line-secondary)" fillOpacity={0.15} strokeWidth={1.6} />
+              <YAxis formatValue={(value) => `${value.toFixed(2)}`} />
+              <XAxis numTicks={4} />
+              <ChartTooltip />
+            </AreaChart>
+
+            <div className="mt-3 grid gap-2 sm:grid-cols-3">
+              <div className="rounded-lg border border-zinc-800/80 bg-zinc-900/60 px-3 py-2 text-xs text-zinc-300">SY reserve: <span className="text-zinc-100">{latestLiquidity.sy.toFixed(4)}</span></div>
+              <div className="rounded-lg border border-zinc-800/80 bg-zinc-900/60 px-3 py-2 text-xs text-zinc-300">PT reserve: <span className="text-zinc-100">{latestLiquidity.pt.toFixed(4)}</span></div>
+              <div className="rounded-lg border border-zinc-800/80 bg-zinc-900/60 px-3 py-2 text-xs text-zinc-300">Total liquidity: <span className="text-zinc-100">{latestLiquidity.total.toFixed(4)}</span></div>
+            </div>
+          </div>
+        ) : null}
       </div>
     </div>
   );

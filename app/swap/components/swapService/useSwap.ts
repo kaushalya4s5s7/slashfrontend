@@ -141,6 +141,8 @@ export function useSwap(mode: Mode, direction: SwapDirection, amount: string, sl
     tokenIn,
     parsedAmount,
     impliedRateBps,
+    ptReserve: (ptReserve as bigint | undefined) ?? 0n,
+    syReserve: (syReserve as bigint | undefined) ?? 0n,
     slippageBps,
     expectedOut,
     minOut,

@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo } from "react";
-import { useReadContract } from "wagmi";
+import { useReadContract, useReadContracts } from "wagmi";
+import { zeroAddress } from "viem";
 import { ADDRESSES } from "@/shared/hooks/useContractAddresses";
 import { COMP_ABI, ORACLE_ABI, REGISTRY_ABI } from "@/shared/lib/abis";
 
@@ -27,21 +28,61 @@ export function useAgents() {
     query: { refetchInterval: 15_000 },
   });
 
-  const winnerRound = useMemo(() => {
+  const winnerRounds = useMemo(() => {
     const current = round.data;
-    if (!current || current === 0n) return 0n;
-    return current - 1n;
+    if (!current || current <= 1n) return [] as bigint[];
+
+    const from = current - 1n;
+    const lookback = 12n;
+    const to = from > lookback ? from - lookback + 1n : 1n;
+
+    const rounds: bigint[] = [];
+    for (let r = from; r >= to; r--) {
+      rounds.push(r);
+      if (r === 1n) break;
+    }
+    return rounds;
   }, [round.data]);
 
-  const winner = useReadContract({
-    address: ADDRESSES.COMP_D,
-    abi: COMP_ABI,
-    functionName: "getWinner",
-    args: [winnerRound],
-    query: { enabled: winnerRound > 0n, refetchInterval: 10_000 },
+  const winnerReads = useReadContracts({
+    contracts: winnerRounds.map((r) => ({
+      address: ADDRESSES.COMP_D,
+      abi: COMP_ABI,
+      functionName: "getWinner",
+      args: [r],
+    })),
+    query: { enabled: winnerRounds.length > 0, refetchInterval: 10_000 },
   });
 
-  const winnerAddress = winner.data?.winner;
+  const latestWinner = useMemo(() => {
+    const data = winnerReads.data;
+    if (!data?.length) return null;
+
+    for (let i = 0; i < data.length; i++) {
+      const entry = data[i] as
+        | { result?: { winner?: `0x${string}`; declaredAt?: bigint } }
+        | { winner?: `0x${string}`; declaredAt?: bigint }
+        | undefined;
+
+      const result =
+        entry && typeof entry === "object" && "result" in entry
+          ? entry.result
+          : (entry as { winner?: `0x${string}`; declaredAt?: bigint } | undefined);
+
+      if (!result) continue;
+      if (!result.winner || result.winner === zeroAddress) continue;
+      if ((result.declaredAt ?? 0n) === 0n) continue;
+
+      return {
+        round: winnerRounds[i],
+        winner: result as NonNullable<typeof result>,
+      };
+    }
+
+    return null;
+  }, [winnerReads.data, winnerRounds]);
+
+  const winnerAddress = latestWinner?.winner.winner;
 
   const winnerAgent = useReadContract({
     address: ADDRESSES.REGISTRY,
@@ -55,8 +96,9 @@ export function useAgents() {
     round,
     timeLeft,
     apy,
-    winnerRound,
-    winner,
+    winnerRound: latestWinner?.round ?? 0n,
+    winner: latestWinner?.winner ?? null,
+    winnerReads,
     winnerAgent,
   };
 }
