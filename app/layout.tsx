@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Urbanist } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 import { AppNav } from "@/shared/components/AppNav";
@@ -12,6 +12,11 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+export const urbanist = Urbanist({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -29,11 +34,11 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full bg-zinc-950 text-zinc-100">
+      <body className="h-full bg-zinc-950 text-zinc-100">
         <Providers>
-          <div className="min-h-screen flex flex-col">
+          <div className="flex h-screen min-h-0 flex-col overflow-hidden">
             <AppNav />
-            <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:px-6 lg:px-8">{children}</main>
+            <main className="w-full flex-1 min-h-0 overflow-hidden">{children}</main>
           </div>
         </Providers>
       </body>
