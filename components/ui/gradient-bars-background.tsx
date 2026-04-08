@@ -94,7 +94,7 @@ export default function Component({
 }: ComponentProps) {
   return (
     <section 
-      className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden"
+      className="relative isolate h-full min-h-0 w-full overflow-hidden"
       style={{ backgroundColor }}
     >
       <GradientBars
@@ -105,7 +105,7 @@ export default function Component({
       />
       
       {children && (
-        <div className="relative z-10 w-full h-full flex items-center justify-center px-4">
+        <div className="relative z-10 h-full w-full overflow-hidden">
           {children}
         </div>
       )}

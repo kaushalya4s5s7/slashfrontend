@@ -11,7 +11,7 @@ export function AgentsPanel() {
   const countdown = useRoundCountdown(timeLeft.data);
 
   return (
-    <div className="grid gap-4">
+    <div className="grid gap-4 ">
       <Card>
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold">Delegation Competition</h2>

@@ -19,11 +19,8 @@ export function SplitPanel() {
   const [approveHash, setApproveHash] = useState<`0x${string}` | undefined>();
   const [splitHash, setSplitHash] = useState<`0x${string}` | undefined>();
 
-  const { approve, split, isPending } = useSplit(mode, amount);
-  const approveReceipt = useWaitForTransactionReceipt({ hash: approveHash, query: { enabled: Boolean(approveHash) } });
+  const { approve, split, isPending, needsApproval, canSplit } = useSplit(mode, amount);
   const splitReceipt = useWaitForTransactionReceipt({ hash: splitHash, query: { enabled: Boolean(splitHash) } });
-
-  const canSplit = approveReceipt.data?.status === "success";
 
   return (
     <div className="grid gap-4">
@@ -58,10 +55,14 @@ export function SplitPanel() {
 
       <RequireSiweAuth>
         <Card>
+          <p className="mb-3 text-xs text-zinc-400">
+            {needsApproval ? "Approval required for current amount." : "Allowance is sufficient. You can split directly."}
+          </p>
           <div className="flex flex-wrap items-center gap-2">
             <Button
               variant="secondary"
               loading={isPending}
+              disabled={!needsApproval}
               onClick={async () => {
                 const hash = await approve();
                 setApproveHash(hash);

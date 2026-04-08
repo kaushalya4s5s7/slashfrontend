@@ -4,7 +4,7 @@ import { NetworkGuard } from "@/shared/components/NetworkGuard";
 
 export default function DepositPage() {
   return (
-    <section className="space-y-4">
+    <section className="space-y-4 p-8">
       <PageHeader title="Deposit" subtitle="Entry point: deposit native XTZ into delegation/staking vaults." />
       <NetworkGuard>
         <DepositPanel />

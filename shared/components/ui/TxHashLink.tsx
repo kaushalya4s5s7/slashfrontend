@@ -7,7 +7,7 @@ export function TxHashLink({ hash }: { hash?: `0x${string}` }) {
   if (!hash) return null;
 
   return (
-    <a className="break-all text-xs text-cyan-300 underline-offset-2 hover:underline" href={href} target="_blank" rel="noreferrer">
+    <a className="break-all text-xs text-white-300 underline-offset-2 hover:underline" href={href} target="_blank" rel="noreferrer">
       {hash}
     </a>
   );

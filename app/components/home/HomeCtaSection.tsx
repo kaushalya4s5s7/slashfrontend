@@ -20,17 +20,17 @@ export function HomeCtaSection() {
           Start with one transaction. Let autonomous strategy competition do the hard part.
         </p>
 
-        <div className="mt-9 flex flex-wrap justify-center gap-3">
+        <div className="mt-9 flex flex-wrap justify-center gap-3 font-urbanist ">
           <Link
             href="/deposit"
-            className="group inline-flex items-center gap-2 rounded-xl bg-orange-500 px-7 py-3 text-base font-semibold text-black transition hover:bg-orange-400"
+            className="group inline-flex items-center gap-2  bg-orange-500 px-7 py-3 text-base font-semibold text-black transition hover:bg-orange-400"
           >
             Launch App
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
           </Link>
           <Link
             href="/swap"
-            className="inline-flex items-center rounded-xl border border-zinc-700 bg-black/50 px-7 py-3 text-base font-semibold text-zinc-100 transition hover:border-zinc-600 hover:bg-zinc-900"
+            className="inline-flex items-center  border border-zinc-700 bg-black/50 px-7 py-3 text-base font-semibold text-zinc-100 transition hover:border-zinc-600 hover:bg-zinc-900"
           >
             Explore Markets
           </Link>

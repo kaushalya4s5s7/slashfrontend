@@ -2,12 +2,13 @@
 
 import { useMemo } from "react";
 import { parseEther } from "viem";
-import { useWriteContract } from "wagmi";
+import { useAccount, useReadContract, useWriteContract } from "wagmi";
 import { ADDRESSES } from "@/shared/hooks/useContractAddresses";
 import { ERC20_ABI, SPLITTER_ABI } from "@/shared/lib/abis";
 import { Mode } from "@/shared/types/contracts";
 
 export function useSplit(mode: Mode, amount: string) {
+  const { address } = useAccount();
   const { writeContractAsync, isPending } = useWriteContract();
 
   const token = mode === "DELEGATION" ? ADDRESSES.VAULT_D : ADDRESSES.VAULT_S;
@@ -42,10 +43,28 @@ export function useSplit(mode: Mode, amount: string) {
     });
   };
 
+  const { data: allowance } = useReadContract({
+    address: token,
+    abi: ERC20_ABI,
+    functionName: "allowance",
+    args: address ? [address, ADDRESSES.SPLITTER] : undefined,
+    query: {
+      enabled: Boolean(address),
+      refetchInterval: 8_000,
+    },
+  });
+
+  const currentAllowance = (allowance as bigint | undefined) ?? 0n;
+  const needsApproval = parsedAmount > 0n && currentAllowance < parsedAmount;
+  const canSplit = parsedAmount > 0n && !needsApproval;
+
   return {
     modeValue,
     token,
     parsedAmount,
+    allowance: currentAllowance,
+    needsApproval,
+    canSplit,
     approve,
     split,
     isPending,

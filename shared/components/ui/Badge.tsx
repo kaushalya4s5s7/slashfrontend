@@ -5,7 +5,7 @@ export function Badge({ mode }: { mode: Mode }) {
   return (
     <span
       className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${
-        isDelegation ? "bg-cyan-500/15 text-cyan-300" : "bg-purple-500/15 text-purple-300"
+        isDelegation ? "bg-white-500/15 text-white-300" : "bg-purple-500/15 text-purple-300"
       }`}
     >
       {mode}

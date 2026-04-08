@@ -4,7 +4,7 @@ import { NetworkGuard } from "@/shared/components/NetworkGuard";
 
 export default function SwapPage() {
   return (
-    <section className="space-y-4">
+    <section className="space-y-4 p-8">
       <PageHeader title="Swap" subtitle="Trade PT against slashXTZ using time-decay AMM pools." />
       <NetworkGuard>
         <SwapPanel />

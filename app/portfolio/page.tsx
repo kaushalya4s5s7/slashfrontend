@@ -4,7 +4,7 @@ import { NetworkGuard } from "@/shared/components/NetworkGuard";
 
 export default function PortfolioPage() {
   return (
-    <section className="space-y-4">
+    <section className="space-y-4 p-8">
       <PageHeader title="Portfolio" subtitle="Read all vault, PT, and YT balances from on-chain contracts." />
       <NetworkGuard>
         <PortfolioPanel />

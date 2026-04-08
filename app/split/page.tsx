@@ -4,7 +4,7 @@ import { NetworkGuard } from "@/shared/components/NetworkGuard";
 
 export default function SplitPage() {
   return (
-    <section className="space-y-4">
+    <section className="space-y-4 p-8">
       <PageHeader title="Split" subtitle="Approve vault shares and split into PT/YT via YieldSplitter." />
       <NetworkGuard>
         <SplitPanel />

@@ -50,7 +50,7 @@ export function HomeGovernanceProofSection() {
           <span className="block text-zinc-400">it doesn’t belong in governance.</span>
         </h2>
 
-        <div className="mt-10">
+        <div className="mt-10 font-urbanist ">
           <BentoGrid items={governanceItems} />
         </div>
 

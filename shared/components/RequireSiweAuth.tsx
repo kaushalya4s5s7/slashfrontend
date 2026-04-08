@@ -9,7 +9,7 @@ export function RequireSiweAuth({ children }: { children: React.ReactNode }) {
   if (!isAuthenticated) {
     return (
       <Card>
-        <p className="text-sm text-zinc-300">Sign in with Etherlink (SIWE style) to perform write transactions.</p>
+        <p className="text-sm text-zinc-300">Sign in to perform write transactions.</p>
       </Card>
     );
   }

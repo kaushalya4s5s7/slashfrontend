@@ -1,13 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { SignInWithEtherlink } from "@/shared/components/SignInWithEtherlink";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useAccount } from "wagmi";
+import { ConnectButton, useConnectModal } from "@rainbow-me/rainbowkit";
+import { Button } from "@/shared/components/ui/Button";
+import { useSiweAuth } from "@/shared/context/siwe-auth-context";
 
 const links = [
   { href: "/deposit", label: "Deposit" },
-  { href: "/split", label: "Split" },
   { href: "/swap", label: "Swap" },
   { href: "/portfolio", label: "Portfolio" },
   { href: "/agents", label: "Agents" },
@@ -15,9 +17,61 @@ const links = [
 
 export function AppNav() {
   const pathname = usePathname();
+  const router = useRouter();
+  const { isConnected } = useAccount();
+  const { openConnectModal } = useConnectModal();
+  const { isAuthenticated, signIn, isSigning } = useSiweAuth();
+  const [error, setError] = useState<string | null>(null);
+  const [startFlow, setStartFlow] = useState(false);
+  const [autoSignAttempted, setAutoSignAttempted] = useState(false);
+
+  const onGetStarted = async () => {
+    setError(null);
+    setStartFlow(true);
+    setAutoSignAttempted(false);
+
+    if (!isConnected) {
+      openConnectModal?.();
+      return;
+    }
+
+    if (!isAuthenticated) {
+      try {
+        await signIn();
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Authentication failed");
+        setStartFlow(false);
+        setAutoSignAttempted(false);
+      }
+      return;
+    }
+
+    setStartFlow(false);
+    router.push("/deposit");
+  };
+
+  useEffect(() => {
+    if (!startFlow) return;
+
+    if (isAuthenticated) {
+      setStartFlow(false);
+      setAutoSignAttempted(false);
+      router.push("/deposit");
+      return;
+    }
+
+    if (isConnected && !isSigning && !autoSignAttempted) {
+      setAutoSignAttempted(true);
+      void signIn().catch((err) => {
+        setError(err instanceof Error ? err.message : "Authentication failed");
+        setStartFlow(false);
+        setAutoSignAttempted(false);
+      });
+    }
+  }, [autoSignAttempted, isAuthenticated, isConnected, isSigning, router, signIn, startFlow]);
 
   return (
-    <header className="border-b border-zinc-800 bg-zinc-950/95 backdrop-blur">
+    <header className="overflow-x-hidden border-b border-zinc-800 bg-zinc-950/95 backdrop-blur font-urbanist ">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
         <div className="flex items-center gap-6">
           <Link href="/" className="text-sm font-semibold text-zinc-100">
@@ -41,8 +95,14 @@ export function AppNav() {
           </nav>
         </div>
         <div className="flex items-center gap-2">
-          <SignInWithEtherlink />
-          <ConnectButton chainStatus="icon" accountStatus="address" />
+          {isAuthenticated ? (
+            <ConnectButton chainStatus="icon" accountStatus="address" />
+          ) : (
+            <Button variant="primary" onClick={onGetStarted} loading={isSigning || (startFlow && !isAuthenticated)}>
+              Get Started
+            </Button>
+          )}
+          {error ? <span className="text-xs text-red-400">{error}</span> : null}
         </div>
       </div>
     </header>

@@ -9,11 +9,11 @@ const footerLinks = [
 
 export function HomeFooterSection() {
   return (
-    <section className="relative min-h-[100svh] snap-start overflow-hidden bg-black">
+    <section className="relative min-h-[100svh] snap-start overflow-hidden bg-black font-urbanist ">
       <div className="pointer-events-none absolute inset-0 opacity-30 [background-image:linear-gradient(to_right,rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.06)_1px,transparent_1px);background-size:28px_28px]" />
       <div className="relative mx-auto flex min-h-[100svh] w-full max-w-6xl flex-col justify-between px-4 py-14 sm:px-6 lg:px-8">
         <div>
-          <p className="text-xs uppercase tracking-[0.25em] text-zinc-500">SlashMarket</p>
+          <p className="text-xs uppercase tracking-[0.25em] text-zinc-500 font-urbanist ">SlashMarket</p>
           <h2 className="mt-3 max-w-3xl text-4xl font-semibold tracking-tight text-zinc-100 sm:text-5xl">
             Yield governance,
             <span className="block text-zinc-400">designed for conviction.</span>

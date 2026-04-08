@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/shared/components/ui/Button";
 import { useSiweAuth } from "@/shared/context/siwe-auth-context";
 
 export function SignInWithEtherlink() {
   const { isAuthenticated, signIn, signOut, isSigning } = useSiweAuth();
   const [error, setError] = useState<string | null>(null);
+  const [attempted, setAttempted] = useState(false);
 
   const onSignIn = async () => {
     setError(null);
@@ -17,6 +18,12 @@ export function SignInWithEtherlink() {
     }
   };
 
+  useEffect(() => {
+    if (isAuthenticated || isSigning || attempted) return;
+    setAttempted(true);
+    void onSignIn();
+  }, [attempted, isAuthenticated, isSigning]);
+
   return (
     <div className="flex items-center gap-2">
       {isAuthenticated ? (
@@ -24,9 +31,9 @@ export function SignInWithEtherlink() {
           Sign out (SIWE)
         </Button>
       ) : (
-        <Button variant="secondary" onClick={onSignIn} loading={isSigning}>
-          Sign in with Etherlink
-        </Button>
+        <span className="text-sm text-zinc-400">
+          {isSigning ? "Signing in with Etherlink..." : "Starting sign-in..."}
+        </span>
       )}
       {error ? <span className="text-xs text-red-400">{error}</span> : null}
     </div>

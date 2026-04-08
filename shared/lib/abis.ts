@@ -121,6 +121,27 @@ export const AMM_ABI = [
     ],
     outputs: [{ name: "ptOut", type: "uint256" }],
   },
+  {
+    type: "function",
+    name: "feeRateBps",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+  {
+    type: "function",
+    name: "ptReserve",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+  {
+    type: "function",
+    name: "syReserve",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "uint256" }],
+  },
 ] as const;
 
 export const ORACLE_ABI = [

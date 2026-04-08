@@ -15,6 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const urbanist = Urbanist({
+  variable: "--font-urbanist-next",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
@@ -32,7 +33,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${urbanist.variable} h-full antialiased`}
     >
       <body className="h-full bg-zinc-950 text-zinc-100">
         <Providers>

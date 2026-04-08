@@ -4,7 +4,7 @@ import { NetworkGuard } from "@/shared/components/NetworkGuard";
 
 export default function AgentsPage() {
   return (
-    <section className="space-y-4">
+    <section className="space-y-4 p-8">
       <PageHeader title="Agents" subtitle="Read-only leaderboard from AgentCompetition and AgentRegistry." />
       <NetworkGuard>
         <AgentsPanel />
