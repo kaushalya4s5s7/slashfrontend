@@ -211,6 +211,20 @@ export const COMP_ABI = [
 export const REGISTRY_ABI = [
   {
     type: "function",
+    name: "agentCount",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+  {
+    type: "function",
+    name: "agentList",
+    stateMutability: "view",
+    inputs: [{ name: "index", type: "uint256" }],
+    outputs: [{ name: "", type: "address" }],
+  },
+  {
+    type: "function",
     name: "getAgent",
     stateMutability: "view",
     inputs: [{ name: "agent", type: "address" }],

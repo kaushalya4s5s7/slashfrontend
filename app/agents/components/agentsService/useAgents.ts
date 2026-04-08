@@ -6,6 +6,14 @@ import { zeroAddress } from "viem";
 import { ADDRESSES } from "@/shared/hooks/useContractAddresses";
 import { COMP_ABI, ORACLE_ABI, REGISTRY_ABI } from "@/shared/lib/abis";
 
+export type PlatformAgent = {
+  address: `0x${string}`;
+  name: string;
+  status: number;
+  delegationScore: bigint;
+  stakingScore: bigint;
+};
+
 export function useAgents() {
   const round = useReadContract({
     address: ADDRESSES.COMP_D,
@@ -92,6 +100,86 @@ export function useAgents() {
     query: { enabled: Boolean(winnerAddress), refetchInterval: 10_000 },
   });
 
+  const agentCount = useReadContract({
+    address: ADDRESSES.REGISTRY,
+    abi: REGISTRY_ABI,
+    functionName: "agentCount",
+    query: { refetchInterval: 15_000 },
+  });
+
+  const agentIndexes = useMemo(() => {
+    const count = Number(agentCount.data ?? 0n);
+    const capped = Number.isFinite(count) ? Math.max(0, Math.min(count, 50)) : 0;
+    return Array.from({ length: capped }, (_, i) => BigInt(i));
+  }, [agentCount.data]);
+
+  const agentAddressReads = useReadContracts({
+    contracts: agentIndexes.map((index) => ({
+      address: ADDRESSES.REGISTRY,
+      abi: REGISTRY_ABI,
+      functionName: "agentList",
+      args: [index],
+    })),
+    query: { enabled: agentIndexes.length > 0, refetchInterval: 15_000 },
+  });
+
+  const platformAddresses = useMemo(() => {
+    if (!agentAddressReads.data?.length) return [] as `0x${string}`[];
+
+    return agentAddressReads.data
+      .map((entry) => {
+        if (entry && typeof entry === "object" && "result" in entry) {
+          const result = entry.result;
+          return typeof result === "string" ? (result as `0x${string}`) : undefined;
+        }
+        return typeof entry === "string" ? (entry as `0x${string}`) : undefined;
+      })
+      .filter((addr): addr is `0x${string}` => Boolean(addr));
+  }, [agentAddressReads.data]);
+
+  const platformAgentReads = useReadContracts({
+    contracts: platformAddresses.map((address) => ({
+      address: ADDRESSES.REGISTRY,
+      abi: REGISTRY_ABI,
+      functionName: "getAgent",
+      args: [address],
+    })),
+    query: { enabled: platformAddresses.length > 0, refetchInterval: 15_000 },
+  });
+
+  const platformAgents = useMemo(() => {
+    if (!platformAgentReads.data?.length) return [] as PlatformAgent[];
+
+    return platformAgentReads.data
+      .map((entry, index) => {
+        const address = platformAddresses[index];
+        if (!address) return null;
+
+        const record =
+          entry && typeof entry === "object" && "result" in entry
+            ? entry.result
+            : entry;
+
+        if (!record || typeof record !== "object") return null;
+
+        const parsed = record as unknown as {
+          name?: string;
+          status?: bigint;
+          delegationScore?: bigint;
+          stakingScore?: bigint;
+        };
+
+        return {
+          address,
+          name: parsed.name || "(unnamed)",
+          status: Number(parsed.status ?? 0n),
+          delegationScore: parsed.delegationScore ?? 0n,
+          stakingScore: parsed.stakingScore ?? 0n,
+        } satisfies PlatformAgent;
+      })
+      .filter((agent): agent is PlatformAgent => Boolean(agent));
+  }, [platformAgentReads.data, platformAddresses]);
+
   return {
     round,
     timeLeft,
@@ -100,5 +188,8 @@ export function useAgents() {
     winner: latestWinner?.winner ?? null,
     winnerReads,
     winnerAgent,
+    platformAgents,
+    platformAgentsLoading:
+      agentCount.isLoading || agentAddressReads.isLoading || platformAgentReads.isLoading,
   };
 }
