@@ -293,6 +293,43 @@ graph LR
 
 ---
 
+## ✅ On-Chain Proof: Full Lifecycle (Explorer-Linked)
+
+Explorer base: https://shadownet.explorer.etherlink.com
+
+### Delegation + Core Platform Flow
+
+| Step | Function | Tx link | What happened (1 line) |
+|---|---|---|---|
+| 1 | `registerAgent(string,string)` | [0x958995a61571db0e0e03af19398aa2ba75ecf8fa457913535da5d299262b3f03](https://shadownet.explorer.etherlink.com/tx/0x958995a61571db0e0e03af19398aa2ba75ecf8fa457913535da5d299262b3f03) | Agent identity + metadata + registration bond were recorded in `AgentRegistry`. |
+| 2 | `setCompetition(address)` | [0x8bc6d69e62cace2bc6999071002a3643ee983e11424acf59a2b9f6b61ffb6085](https://shadownet.explorer.etherlink.com/tx/0x8bc6d69e62cace2bc6999071002a3643ee983e11424acf59a2b9f6b61ffb6085) | Platform owner authorized the competition contract on registry. |
+| 3 | `setReporter(address)` | [0xba00fb8565d15c2e7bc30b0827b5771a52a2cb4d6641b03deb1934f53273d285](https://shadownet.explorer.etherlink.com/tx/0xba00fb8565d15c2e7bc30b0827b5771a52a2cb4d6641b03deb1934f53273d285) | Oracle reporter role was configured for yield index updates. |
+| 4 | `setMinter(address)` (PT) | [0xf4d3dcba0e7428c0030ad225cf324d822be6f741146d70eecb927ec3897830c8](https://shadownet.explorer.etherlink.com/tx/0xf4d3dcba0e7428c0030ad225cf324d822be6f741146d70eecb927ec3897830c8) | `YieldSplitter` was granted PT mint/burn rights. |
+| 5 | `setMinter(address)` (YT) | [0x954de5b08dcc2c93d211fe96349c64ecc17f49ff9202dff29a3a95d4b53e3876](https://shadownet.explorer.etherlink.com/tx/0x954de5b08dcc2c93d211fe96349c64ecc17f49ff9202dff29a3a95d4b53e3876) | `YieldSplitter` was granted YT mint/burn rights. |
+| 6 | `deposit()` (Vault) | [0x24a37d515a65d2c44909dfdd96fd363c6596f29a706b9ce7783277e92bbcb91e](https://shadownet.explorer.etherlink.com/tx/0x24a37d515a65d2c44909dfdd96fd363c6596f29a706b9ce7783277e92bbcb91e) | User deposited native XTZ and received vault shares 1:1. |
+| 7 | `approve(address,uint256)` | [0x19f5511e8c4730dd1ce0b2df391a7ab734160f255acbf9836e4f0f7d84028b6e](https://shadownet.explorer.etherlink.com/tx/0x19f5511e8c4730dd1ce0b2df391a7ab734160f255acbf9836e4f0f7d84028b6e) | User approved token spend for splitter/flow continuation. |
+| 8 | `deposit(uint8,uint256)` (Splitter) | [0xe234a9df0e0196aadde9599f0343e8dc8cfc49827ae8845fd07c8b0557c84558](https://shadownet.explorer.etherlink.com/tx/0xe234a9df0e0196aadde9599f0343e8dc8cfc49827ae8845fd07c8b0557c84558) | User split slashXTZ into PT + YT claims. |
+| 9 | `depositBond()` | [0xbaa13d439bf5af6571eb1d5893afd208c9ac00b4a38e0e624b0af793b8b61ce3](https://shadownet.explorer.etherlink.com/tx/0xbaa13d439bf5af6571eb1d5893afd208c9ac00b4a38e0e624b0af793b8b61ce3) | Agent posted competition bond and became round-eligible. |
+| 10 | `submitStrategy(...)` (success) | [0x80d8bb255b5e1e245dd17a48fe84c542455bc4bc53e7d09aaeb684392f8398e3](https://shadownet.explorer.etherlink.com/tx/0x80d8bb255b5e1e245dd17a48fe84c542455bc4bc53e7d09aaeb684392f8398e3) | Agent submitted baker prediction + reason hash for the round. |
+| 11 | `settleRound(uint256)` | [0xfce3c75a30017bda05c15a3fd0821e1bae81a973b6323df036bbb4ea358a6f9b](https://shadownet.explorer.etherlink.com/tx/0xfce3c75a30017bda05c15a3fd0821e1bae81a973b6323df036bbb4ea358a6f9b) | Round settled, winner chosen by lowest prediction error, scores updated. |
+| 12 | `receiveYield(address,bytes32)` (Vault D) | [0x047a835ccf65a80318871c9d725701145f2708d90bddadd16612019cc3b1094e](https://shadownet.explorer.etherlink.com/tx/0x047a835ccf65a80318871c9d725701145f2708d90bddadd16612019cc3b1094e) | Relayer delivered bridged yield and minted beneficiary shares. |
+| 13 | `swapSYforPT(uint256,uint256)` | [0xa5b594fe49859e52405b4deb438b4a6c21dda6a3c94414fae26296b83560bae9](https://shadownet.explorer.etherlink.com/tx/0xa5b594fe49859e52405b4deb438b4a6c21dda6a3c94414fae26296b83560bae9) | User traded variable-yield exposure for fixed-principal exposure. |
+| 14 | `redeem(uint256)` (Vault) | [0x4c8131711be5600b1b3f0d50dc5c3feaad77f0974fb2f35392baf089c5de3bb7](https://shadownet.explorer.etherlink.com/tx/0x4c8131711be5600b1b3f0d50dc5c3feaad77f0974fb2f35392baf089c5de3bb7) | User redeemed vault shares back to native XTZ. |
+
+### Staking Lane + Edge Cases
+
+| Step | Function | Tx link | What happened (1 line) |
+|---|---|---|---|
+| 15 | `submitStrategy(...)` (error / edge case) | [0x2f1db57faa8adba57845b4dbec4830c92a0bc7d51201e645c7d5fd523a46c717](https://shadownet.explorer.etherlink.com/tx/0x2f1db57faa8adba57845b4dbec4830c92a0bc7d51201e645c7d5fd523a46c717) | Agent submission reverted (inactive/banned or failed round precondition). |
+| 16 | `submitStrategy(...)` (staking error sample) | [0xe5b543a737457fd94426daae7de1ab23b23f1411e22f0bdf54f25540347ca9c2](https://shadownet.explorer.etherlink.com/tx/0xe5b543a737457fd94426daae7de1ab23b23f1411e22f0bdf54f25540347ca9c2) | Staking-side submission failure confirms same enforcement on second mode. |
+| 17 | `accelerateRound()` | [0x9f4ca126360f1137f696d6c5d13e5c70a96b83604fee952f677b1fb6936aa2ff](https://shadownet.explorer.etherlink.com/tx/0x9f4ca126360f1137f696d6c5d13e5c70a96b83604fee952f677b1fb6936aa2ff) | Owner forced round end for controlled testing/ops flow. |
+| 18 | `settleRound(uint256)` (staking) | [0x0f4491c47651260f529085be2a2ae2bf925dcf13d2ab7fafcb45369916d0f7c7](https://shadownet.explorer.etherlink.com/tx/0x0f4491c47651260f529085be2a2ae2bf925dcf13d2ab7fafcb45369916d0f7c7) | Staking round settled with winner declaration and score updates. |
+| 19 | `receiveYield(address,bytes32)` (Vault S) | [0x6f3c9c5cb0d09da09cb422a3f80d07891888f9c983906da280b043c6d89d5b6a](https://shadownet.explorer.etherlink.com/tx/0x6f3c9c5cb0d09da09cb422a3f80d07891888f9c983906da280b043c6d89d5b6a) | Staking yield was bridged and credited on L2 vault. |
+
+> This proof set intentionally includes successful user/platform/agent actions and revert edge-cases to demonstrate full lifecycle integrity.
+
+---
+
 ## ⚔️ Challenges We Faced & How We Solved Them
 
 *   **The L1/L2 Synchronicity Paradox:** Syncing state between a non-EVM L1 (Tezos) and an EVM L2 (Etherlink) without a 14-day rollup refutation delay.
