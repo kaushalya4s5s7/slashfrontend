@@ -3,30 +3,38 @@ import { Brain, Layers3, ShieldCheck, Sparkles } from "lucide-react";
 const features = [
   {
     icon: Brain,
-    title: "Agent-Native Strategy",
-    text: "Autonomous agents continuously evaluate validator quality and compete on prediction accuracy, not marketing noise.",
-    badge: "Decision Engine",
+    title: "Meritocratic Baker Selection",
+    text: "AI agents compete round-by-round and learn from outcomes to select high-quality bakers using fee, uptime, risk, and historical performance.",
+    problem: "Problem: single-baker centralization or quality-blind neutral spread.",
+    solution: "Solution: Stackelberg-style competition where weak strategies are punished and strong ones compound.",
+    badge: "Governance Core",
     glow: "from-orange-400/30 via-amber-300/10 to-transparent",
   },
   {
     icon: Layers3,
-    title: "Structured Yield",
-    text: "Slice vault exposure into PT and YT to shape fixed or variable risk with intent-grade precision.",
-    badge: "Composable",
+    title: "Incentives Today, Not Only Later",
+    text: "Depositors immediately receive liquid vault exposure and can split into PT/YT to take fixed, variable, or hybrid yield views from day one.",
+    problem: "Problem: traditional delegation asks users to wait passively for future rewards.",
+    solution: "Solution: instant optionality via slashXTZ + PT/YT market structure.",
+    badge: "User Incentives",
     glow: "from-cyan-400/30 via-sky-300/10 to-transparent",
   },
   {
     icon: ShieldCheck,
-    title: "Verifiable Trust",
-    text: "Every submission, score, and winner declaration is recorded on-chain and inspectable in seconds.",
-    badge: "Auditable",
+    title: "Verifiable Governance Proof",
+    text: "Every decision is auditable through on-chain winner declarations, scoring trails, and reason hashes tied to strategy submissions.",
+    problem: "Problem: governance quality is hard to measure in real time.",
+    solution: "Solution: continuous cryptoeconomic proof from real rounds and outcomes.",
+    badge: "Proof Layer",
     glow: "from-emerald-400/30 via-teal-300/10 to-transparent",
   },
   {
     icon: Sparkles,
-    title: "Premium Execution",
-    text: "Elegant UX is backed by contract-native flows, deterministic state handling, and battle-ready transaction rails.",
-    badge: "Production Grade",
+    title: "Non-Custodial Execution Rail",
+    text: "Native vault deposits, contract-level redemption, and deterministic settlement compose a production-ready path from strategy to user payout.",
+    problem: "Problem: users should not trust operators to release funds.",
+    solution: "Solution: contract-native flows with always-available redemption semantics.",
+    badge: "Execution Layer",
     glow: "from-fuchsia-400/30 via-violet-300/10 to-transparent",
   },
 ];
@@ -39,18 +47,18 @@ export function HomeFeaturesSection() {
         <div className="lg:sticky lg:top-24 lg:h-fit">
           <p className="text-xs uppercase tracking-[0.3em] text-orange-300/90">Features</p>
           <h2 className="mt-4 max-w-xl text-4xl font-semibold tracking-tight text-zinc-100 sm:text-5xl">
-            SlashMarket flow.
-            <span className="block text-zinc-400">Agent intelligence, structured yield, and on-chain proof.</span>
+            Protocol core, presented clearly.
+            <span className="block text-zinc-400">Competition-driven governance + immediate user incentives.</span>
           </h2>
           <p className="font-urbanist mt-5 max-w-md text-sm leading-relaxed text-zinc-400 sm:text-base">
-            Move from strategy decisions to PT/YT structuring and verifiable settlement in one native product narrative.
-            Every layer maps directly to real contracts, real rounds, and real user outcomes.
+            SlashMarket solves the centralization-versus-quality dilemma with meritocratic agent competition,
+            while giving delegators and stakers tradable incentive surfaces immediately at deposit time.
           </p>
 
           <div className="mt-7 flex flex-wrap gap-2 font-urbanist">
-            <span className="rounded-full border border-zinc-700/80 bg-zinc-900/80 px-3 py-1 text-xs text-zinc-300">Agent Governance</span>
-            <span className="rounded-full border border-zinc-700/80 bg-zinc-900/80 px-3 py-1 text-xs text-zinc-300">PT/YT Markets</span>
-            <span className="rounded-full border border-zinc-700/80 bg-zinc-900/80 px-3 py-1 text-xs text-zinc-300">On-Chain Proof</span>
+            <span className="rounded-full border border-zinc-700/80 bg-zinc-900/80 px-3 py-1 text-xs text-zinc-300">Stackelberg Competition</span>
+            <span className="rounded-full border border-zinc-700/80 bg-zinc-900/80 px-3 py-1 text-xs text-zinc-300">Meritocratic Governance</span>
+            <span className="rounded-full border border-zinc-700/80 bg-zinc-900/80 px-3 py-1 text-xs text-zinc-300">Instant Incentive Surface</span>
           </div>
         </div>
 
@@ -78,6 +86,15 @@ export function HomeFeaturesSection() {
 
                   <h3 className="mt-6 text-2xl font-semibold tracking-tight text-zinc-100 sm:text-[1.75rem]">{item.title}</h3>
                   <p className="font-urbanist mt-3 max-w-xl text-sm leading-relaxed text-zinc-300 sm:text-base">{item.text}</p>
+
+                  <div className="mt-5 grid gap-2">
+                    <p className="rounded-lg border border-zinc-800/80 bg-black/25 px-3 py-2 text-xs text-zinc-400">
+                      <span className="font-semibold text-zinc-200">{item.problem}</span>
+                    </p>
+                    <p className="rounded-lg border border-zinc-800/80 bg-black/25 px-3 py-2 text-xs text-zinc-300">
+                      {item.solution}
+                    </p>
+                  </div>
 
                   <div className="mt-6 h-px w-full bg-gradient-to-r from-transparent via-white/20 to-transparent" />
                 </div>

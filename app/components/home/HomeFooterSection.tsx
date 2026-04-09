@@ -12,24 +12,32 @@ export function HomeFooterSection() {
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSvj5CRlqZQk2Q587Qd1QEqxjjzYy4wIuDR6g&s";
 
   return (
-    <section className="relative min-h-[100svh] snap-start overflow-hidden bg-black font-urbanist ">
-      <div className="pointer-events-none absolute inset-0 opacity-30 [background-image:linear-gradient(to_right,rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.06)_1px,transparent_1px);background-size:28px_28px]" />
-      <div className="relative mx-auto flex min-h-[100svh] w-full max-w-6xl flex-col justify-between px-4 py-14 sm:px-6 lg:px-8">
-        <div>
-          <p className="text-xs uppercase tracking-[0.25em] text-zinc-500 font-urbanist ">SlashMarket</p>
-          <h2 className="mt-3 max-w-3xl text-4xl font-semibold tracking-tight text-zinc-100 sm:text-5xl">
-            Yield governance,
-            <span className="block text-zinc-400">designed for conviction.</span>
+    <section className="relative min-h-[100svh] snap-start overflow-hidden bg-zinc-950 font-urbanist">
+      <div className="pointer-events-none absolute inset-0 opacity-40 [background:radial-gradient(circle_at_12%_18%,rgba(255,94,0,0.2),transparent_34%),radial-gradient(circle_at_82%_20%,rgba(168,85,247,0.18),transparent_28%),radial-gradient(circle_at_70%_80%,rgba(255,255,255,0.08),transparent_36%)]" />
+      <div className="pointer-events-none absolute inset-0 opacity-25 [background-image:linear-gradient(to_right,rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.06)_1px,transparent_1px);background-size:30px_30px]" />
+      <p className="pointer-events-none absolute left-1/2 top-10 -translate-x-1/2 font-cinzel text-[10vw] font-bold tracking-[0.2em] text-white/[0.06] sm:text-[9vw]">
+        SLASHMARKET
+      </p>
+
+      <div className="relative mx-auto flex min-h-[100svh] w-full max-w-6xl flex-col justify-between gap-12 px-4 py-14 sm:px-6 lg:px-8 lg:py-16">
+        <div className="pt-8 sm:pt-12">
+          <p className="text-xs uppercase tracking-[0.3em] text-orange-300/90">Closing Statement</p>
+          <h2 className="mt-4 max-w-4xl text-4xl font-semibold tracking-tight text-zinc-100 sm:text-6xl">
+            Compete on intelligence.
+            <span className="block text-zinc-400">Settle with proof.</span>
           </h2>
+          <p className="mt-5 max-w-2xl text-sm leading-relaxed text-zinc-400 sm:text-base">
+            SlashMarket turns baker selection into a meritocratic game and gives users immediate optionality through liquid, structured yield rails.
+          </p>
         </div>
 
-        <div className="grid gap-8 md:grid-cols-3">
+        <div className="grid gap-8 border-y border-zinc-900/90 py-8 md:grid-cols-3">
           <div>
-            <p className="text-sm font-semibold text-zinc-200">Platform</p>
-            <ul className="mt-3 space-y-2 text-sm text-zinc-400">
+            <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">Explore</p>
+            <ul className="mt-3 space-y-2 text-sm text-zinc-300">
               {footerLinks.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="transition hover:text-zinc-200">
+                  <Link href={link.href} className="transition hover:text-orange-200">
                     {link.label}
                   </Link>
                 </li>
@@ -38,27 +46,30 @@ export function HomeFooterSection() {
           </div>
 
           <div>
-            <p className="text-sm font-semibold text-zinc-200">Core Thesis</p>
+            <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">Protocol Thesis</p>
             <p className="mt-3 text-sm leading-relaxed text-zinc-400">
-              Let agents compete for alpha, but force every decision through a verifiable governance rail.
+              Replace quality-blind allocation with a competitive market where agents continuously learn and optimize baker selection.
             </p>
           </div>
 
           <div>
-            <p className="text-sm font-semibold text-zinc-200">Network</p>
-            <p className="mt-3 text-sm text-zinc-400">Etherlink Shadownet · Tezos-native strategy intelligence.</p>
+            <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">Network Context</p>
+            <p className="mt-3 text-sm leading-relaxed text-zinc-400">
+              Tezos-native yield intelligence, executed on Etherlink Shadownet with fully transparent strategy trails.
+            </p>
           </div>
         </div>
-       
 
-        <div className="border-t border-zinc-900 pt-4">
-          <div className="flex flex-wrap items-center gap-3 text-xs text-zinc-500">
-            <span className="text-[20px]  tracking-[0.12em] text-zinc-500">Built On</span>
-            <a href={poweredByImage} target="_blank" rel="noreferrer" className="inline-flex items-center">
+        <div className="flex flex-wrap items-end justify-between gap-4 pt-1">
+          <p className="text-xs text-zinc-500">© {new Date().getFullYear()} SlashMarket · Autonomous governance, human-readable proof.</p>
+
+          <div className="flex items-center gap-3 text-xs text-zinc-500">
+            <span className="text-[11px] uppercase tracking-[0.14em] text-zinc-500">Built on</span>
+            <a href={poweredByImage} target="_blank" rel="noreferrer" className="inline-flex items-center rounded-md px-1 py-1">
               <img
                 src={poweredByImage}
-                alt="Powered by"
-                className="h-5 w-auto rounded-md border border-zinc-800/80 object-contain sm:h-10"
+                alt="Built on"
+                className="h-8 w-auto object-contain opacity-90 transition hover:opacity-100 sm:h-10"
               />
             </a>
           </div>
