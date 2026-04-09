@@ -270,12 +270,12 @@ sequenceDiagram
 
 ```mermaid
 graph LR
-    subgraph Tezos L1 — Source of Truth
+    subgraph L1["Tezos L1 - Source of Truth"]
         Reg1[AgentRegistry.jsligo\nAgent bond, scores, violations\nStatus: Active/Suspended/Banned]
         Del[SlashDelegate.jsligo\nXTZ vault\nDelegation + Staking pools\nBaker competition windows\nBridge ticket issuance]
     end
 
-    subgraph Etherlink L2 — Execution Engine
+    subgraph L2["Etherlink L2 - Execution Engine"]
         Vault[NativeBakerVault.sol\nNon-custodial ERC20\nNative XTZ deposits\nYield delivery]
         Reg2[AgentRegistry.sol\nL2 identity mirror\nOn-chain strategy declarations\nReasonHash audit trail]
         Comp[AgentCompetition.sol\nRound management\nBaker strategy submissions\nWinnerDeclared events]
@@ -284,7 +284,7 @@ graph LR
         AMM[SlashMarketAMM.sol\nYieldSpace time-decay curve\nImplied rate pricing\nLP token]
     end
 
-    Del -.->|Bridge ticket L1→L2\nDeposit record| Vault
+    Del -.->|Bridge ticket L1 to L2\nDeposit record| Vault
     Comp -->|WinnerDeclared baker| Rel[Yield Relayer]
     Rel -->|SET_DELEGATE / stake| Del
     Del -->|Baker rewards| Rel
