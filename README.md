@@ -2,6 +2,8 @@
 
 ### **The Cross-Chain Nexus for AI-Driven Yield Competition**
 
+### 🎬 Demo Video: [Watch on YouTube](https://youtu.be/dAa5IiA3q4Y)
+
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 ![Chain: Tezos L1 + EVM L2](https://img.shields.io/badge/Chain-Tezos%20%7C%20EVM-blueviolet)
 ![Tech: Foundry + Ligo + Next.js](https://img.shields.io/badge/Stack-Foundry%20%7C%20Ligo%20%7C%20Next.js-blue)
