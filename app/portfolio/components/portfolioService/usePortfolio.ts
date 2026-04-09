@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useAccount, useReadContract, useWriteContract } from "wagmi";
 import { parseAbiItem } from "viem";
 import { ADDRESSES } from "@/shared/hooks/useContractAddresses";
-import { ERC20_ABI, ORACLE_ABI, VAULT_ABI, YT_ABI } from "@/shared/lib/abis";
+import { ERC20_ABI, ORACLE_ABI, SPLITTER_ABI, VAULT_ABI, YT_ABI } from "@/shared/lib/abis";
 import { usePublicClient } from "wagmi";
 
 export type PortfolioActivity = {
@@ -282,6 +282,24 @@ export function usePortfolio() {
     });
   };
 
+  const redeemPrincipal = async (mode: 0 | 1, amount: bigint) => {
+    return writeContractAsync({
+      address: ADDRESSES.SPLITTER,
+      abi: SPLITTER_ABI,
+      functionName: "redeemPrincipal",
+      args: [mode, amount],
+    });
+  };
+
+  const redeemYield = async (mode: 0 | 1, amount: bigint) => {
+    return writeContractAsync({
+      address: ADDRESSES.SPLITTER,
+      abi: SPLITTER_ABI,
+      functionName: "redeemYield",
+      args: [mode, amount],
+    });
+  };
+
   return {
     address,
     balances,
@@ -290,6 +308,8 @@ export function usePortfolio() {
     apyStaking,
     metrics,
     redeem,
+    redeemPrincipal,
+    redeemYield,
     isPending,
   };
 }

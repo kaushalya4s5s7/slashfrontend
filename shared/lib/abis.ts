@@ -72,6 +72,26 @@ export const SPLITTER_ABI = [
   },
   {
     type: "function",
+    name: "redeemPrincipal",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "mode", type: "uint8" },
+      { name: "ptAmount", type: "uint256" },
+    ],
+    outputs: [],
+  },
+  {
+    type: "function",
+    name: "redeemYield",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "mode", type: "uint8" },
+      { name: "ytAmount", type: "uint256" },
+    ],
+    outputs: [],
+  },
+  {
+    type: "function",
     name: "syncYieldIndex",
     stateMutability: "nonpayable",
     inputs: [],

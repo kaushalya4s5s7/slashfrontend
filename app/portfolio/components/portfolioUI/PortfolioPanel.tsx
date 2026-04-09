@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { formatUnits, parseUnits } from "viem";
 import { useWaitForTransactionReceipt } from "wagmi";
 import { Card } from "@/shared/components/ui/Card";
 import { Button } from "@/shared/components/ui/Button";
@@ -9,12 +10,19 @@ import { usePortfolio } from "@/app/portfolio/components/portfolioService/usePor
 import { formatBps, formatToken } from "@/shared/utils/format";
 import { RequireSiweAuth } from "@/shared/components/RequireSiweAuth";
 import { TxHashLink } from "@/shared/components/ui/TxHashLink";
-import { getRedeemPortion } from "@/app/portfolio/hooks/useRedeemFraction";
 import { Area, AreaChart, ChartTooltip, Grid, XAxis, YAxis } from "@/components/ui/area-chart";
 
 export function PortfolioPanel() {
-  const { address, balances, redeem, isPending, metrics, activity, apyDelegation, apyStaking } = usePortfolio();
+  const { address, balances, redeem, redeemPrincipal, redeemYield, isPending, metrics, activity, apyDelegation, apyStaking } = usePortfolio();
   const [redeemHash, setRedeemHash] = useState<`0x${string}` | undefined>();
+  const [amounts, setAmounts] = useState<Record<string, string>>({
+    slashD: "",
+    ptD: "",
+    ytD: "",
+    slashS: "",
+    ptS: "",
+    ytS: "",
+  });
   const redeemReceipt = useWaitForTransactionReceipt({ hash: redeemHash, query: { enabled: Boolean(redeemHash) } });
 
   if (!address) {
@@ -34,6 +42,19 @@ export function PortfolioPanel() {
       value: Number((start + i * daily).toFixed(4)),
     }));
   }, [metrics.dailyYield, metrics.total]);
+
+  const parseAmountWei = (value: string) => {
+    if (!value.trim()) return 0n;
+    try {
+      return parseUnits(value, 18);
+    } catch {
+      return 0n;
+    }
+  };
+
+  const setMax = (key: string, balance: bigint) => {
+    setAmounts((prev) => ({ ...prev, [key]: formatUnits(balance, 18) }));
+  };
 
   return (
     <div className="grid gap-5">
@@ -117,20 +138,104 @@ export function PortfolioPanel() {
             <div className="flex justify-between rounded-lg border border-zinc-800/70 bg-black/20 px-3 py-2"><dt className="text-zinc-400">PT_D</dt><dd className="text-zinc-100">{formatToken(ptD)}</dd></div>
             <div className="flex justify-between rounded-lg border border-zinc-800/70 bg-black/20 px-3 py-2"><dt className="text-zinc-400">YT_D</dt><dd className="text-zinc-100">{formatToken(ytD)}</dd></div>
           </dl>
-          <RequireSiweAuth>
-            <Button
-              className="mt-5 h-11 w-full rounded-xl"
-              variant="secondary"
-              loading={isPending}
-              disabled={slashD <= 0n}
-              onClick={async () => {
-                const hash = await redeem("D", getRedeemPortion(slashD));
-                setRedeemHash(hash);
-              }}
-            >
-              Redeem 10% slashDXTZ
-            </Button>
-          </RequireSiweAuth>
+
+          <div className="mt-4 space-y-3">
+            <div className="rounded-xl border border-zinc-800/70 bg-black/20 p-3">
+              <p className="font-urbanist text-xs text-zinc-400">Redeem slashDXTZ → native XTZ</p>
+              <div className="mt-2 flex gap-2">
+                <input
+                  value={amounts.slashD}
+                  onChange={(e) => setAmounts((prev) => ({ ...prev, slashD: e.target.value }))}
+                  placeholder="0.0"
+                  className="h-10 w-full border border-zinc-700 bg-zinc-900/60 px-3 text-sm text-zinc-100 outline-none focus:border-zinc-500"
+                />
+                <Button type="button" variant="secondary" className="h-10" onClick={() => setMax("slashD", slashD)}>Max</Button>
+              </div>
+              <RequireSiweAuth>
+                <Button
+                  className="mt-2 h-10 w-full rounded-xl"
+                  variant="secondary"
+                  loading={isPending}
+                  disabled={(() => {
+                    const amount = parseAmountWei(amounts.slashD);
+                    return amount <= 0n || amount > slashD;
+                  })()}
+                  onClick={async () => {
+                    const amount = parseAmountWei(amounts.slashD);
+                    if (amount <= 0n || amount > slashD) return;
+                    const hash = await redeem("D", amount);
+                    setRedeemHash(hash);
+                  }}
+                >
+                  Redeem slashDXTZ
+                </Button>
+              </RequireSiweAuth>
+            </div>
+
+            <div className="rounded-xl border border-zinc-800/70 bg-black/20 p-3">
+              <p className="font-urbanist text-xs text-zinc-400">Redeem PT_D (after settlement)</p>
+              <div className="mt-2 flex gap-2">
+                <input
+                  value={amounts.ptD}
+                  onChange={(e) => setAmounts((prev) => ({ ...prev, ptD: e.target.value }))}
+                  placeholder="0.0"
+                  className="h-10 w-full border border-zinc-700 bg-zinc-900/60 px-3 text-sm text-zinc-100 outline-none focus:border-zinc-500"
+                />
+                <Button type="button" variant="secondary" className="h-10" onClick={() => setMax("ptD", ptD)}>Max</Button>
+              </div>
+              <RequireSiweAuth>
+                <Button
+                  className="mt-2 h-10 w-full rounded-xl"
+                  variant="secondary"
+                  loading={isPending}
+                  disabled={(() => {
+                    const amount = parseAmountWei(amounts.ptD);
+                    return amount <= 0n || amount > ptD;
+                  })()}
+                  onClick={async () => {
+                    const amount = parseAmountWei(amounts.ptD);
+                    if (amount <= 0n || amount > ptD) return;
+                    const hash = await redeemPrincipal(0, amount);
+                    setRedeemHash(hash);
+                  }}
+                >
+                  Redeem PT_D
+                </Button>
+              </RequireSiweAuth>
+            </div>
+
+            <div className="rounded-xl border border-zinc-800/70 bg-black/20 p-3">
+              <p className="font-urbanist text-xs text-zinc-400">Redeem YT_D (after settlement)</p>
+              <div className="mt-2 flex gap-2">
+                <input
+                  value={amounts.ytD}
+                  onChange={(e) => setAmounts((prev) => ({ ...prev, ytD: e.target.value }))}
+                  placeholder="0.0"
+                  className="h-10 w-full border border-zinc-700 bg-zinc-900/60 px-3 text-sm text-zinc-100 outline-none focus:border-zinc-500"
+                />
+                <Button type="button" variant="secondary" className="h-10" onClick={() => setMax("ytD", ytD)}>Max</Button>
+              </div>
+              <RequireSiweAuth>
+                <Button
+                  className="mt-2 h-10 w-full rounded-xl"
+                  variant="secondary"
+                  loading={isPending}
+                  disabled={(() => {
+                    const amount = parseAmountWei(amounts.ytD);
+                    return amount <= 0n || amount > ytD;
+                  })()}
+                  onClick={async () => {
+                    const amount = parseAmountWei(amounts.ytD);
+                    if (amount <= 0n || amount > ytD) return;
+                    const hash = await redeemYield(0, amount);
+                    setRedeemHash(hash);
+                  }}
+                >
+                  Redeem YT_D
+                </Button>
+              </RequireSiweAuth>
+            </div>
+          </div>
         </Card>
 
         <Card className="rounded-3xl border-zinc-800/80 bg-zinc-900/60 p-6 backdrop-blur-xl">
@@ -143,22 +248,110 @@ export function PortfolioPanel() {
             <div className="flex justify-between rounded-lg border border-zinc-800/70 bg-black/20 px-3 py-2"><dt className="text-zinc-400">PT_S</dt><dd className="text-zinc-100">{formatToken(ptS)}</dd></div>
             <div className="flex justify-between rounded-lg border border-zinc-800/70 bg-black/20 px-3 py-2"><dt className="text-zinc-400">YT_S</dt><dd className="text-zinc-100">{formatToken(ytS)}</dd></div>
           </dl>
-          <RequireSiweAuth>
-            <Button
-              className="mt-5 h-11 w-full rounded-xl"
-              variant="secondary"
-              loading={isPending}
-              disabled={slashS <= 0n}
-              onClick={async () => {
-                const hash = await redeem("S", getRedeemPortion(slashS));
-                setRedeemHash(hash);
-              }}
-            >
-              Redeem 10% slashSXTZ
-            </Button>
-          </RequireSiweAuth>
+
+          <div className="mt-4 space-y-3">
+            <div className="rounded-xl border border-zinc-800/70 bg-black/20 p-3">
+              <p className="font-urbanist text-xs text-zinc-400">Redeem slashSXTZ → native XTZ</p>
+              <div className="mt-2 flex gap-2">
+                <input
+                  value={amounts.slashS}
+                  onChange={(e) => setAmounts((prev) => ({ ...prev, slashS: e.target.value }))}
+                  placeholder="0.0"
+                  className="h-10 w-full border border-zinc-700 bg-zinc-900/60 px-3 text-sm text-zinc-100 outline-none focus:border-zinc-500"
+                />
+                <Button type="button" variant="secondary" className="h-10" onClick={() => setMax("slashS", slashS)}>Max</Button>
+              </div>
+              <RequireSiweAuth>
+                <Button
+                  className="mt-2 h-10 w-full rounded-xl"
+                  variant="secondary"
+                  loading={isPending}
+                  disabled={(() => {
+                    const amount = parseAmountWei(amounts.slashS);
+                    return amount <= 0n || amount > slashS;
+                  })()}
+                  onClick={async () => {
+                    const amount = parseAmountWei(amounts.slashS);
+                    if (amount <= 0n || amount > slashS) return;
+                    const hash = await redeem("S", amount);
+                    setRedeemHash(hash);
+                  }}
+                >
+                  Redeem slashSXTZ
+                </Button>
+              </RequireSiweAuth>
+            </div>
+
+            <div className="rounded-xl border border-zinc-800/70 bg-black/20 p-3">
+              <p className="font-urbanist text-xs text-zinc-400">Redeem PT_S (after settlement)</p>
+              <div className="mt-2 flex gap-2">
+                <input
+                  value={amounts.ptS}
+                  onChange={(e) => setAmounts((prev) => ({ ...prev, ptS: e.target.value }))}
+                  placeholder="0.0"
+                  className="h-10 w-full border border-zinc-700 bg-zinc-900/60 px-3 text-sm text-zinc-100 outline-none focus:border-zinc-500"
+                />
+                <Button type="button" variant="secondary" className="h-10" onClick={() => setMax("ptS", ptS)}>Max</Button>
+              </div>
+              <RequireSiweAuth>
+                <Button
+                  className="mt-2 h-10 w-full rounded-xl"
+                  variant="secondary"
+                  loading={isPending}
+                  disabled={(() => {
+                    const amount = parseAmountWei(amounts.ptS);
+                    return amount <= 0n || amount > ptS;
+                  })()}
+                  onClick={async () => {
+                    const amount = parseAmountWei(amounts.ptS);
+                    if (amount <= 0n || amount > ptS) return;
+                    const hash = await redeemPrincipal(1, amount);
+                    setRedeemHash(hash);
+                  }}
+                >
+                  Redeem PT_S
+                </Button>
+              </RequireSiweAuth>
+            </div>
+
+            <div className="rounded-xl border border-zinc-800/70 bg-black/20 p-3">
+              <p className="font-urbanist text-xs text-zinc-400">Redeem YT_S (after settlement)</p>
+              <div className="mt-2 flex gap-2">
+                <input
+                  value={amounts.ytS}
+                  onChange={(e) => setAmounts((prev) => ({ ...prev, ytS: e.target.value }))}
+                  placeholder="0.0"
+                  className="h-10 w-full border border-zinc-700 bg-zinc-900/60 px-3 text-sm text-zinc-100 outline-none focus:border-zinc-500"
+                />
+                <Button type="button" variant="secondary" className="h-10" onClick={() => setMax("ytS", ytS)}>Max</Button>
+              </div>
+              <RequireSiweAuth>
+                <Button
+                  className="mt-2 h-10 w-full rounded-xl"
+                  variant="secondary"
+                  loading={isPending}
+                  disabled={(() => {
+                    const amount = parseAmountWei(amounts.ytS);
+                    return amount <= 0n || amount > ytS;
+                  })()}
+                  onClick={async () => {
+                    const amount = parseAmountWei(amounts.ytS);
+                    if (amount <= 0n || amount > ytS) return;
+                    const hash = await redeemYield(1, amount);
+                    setRedeemHash(hash);
+                  }}
+                >
+                  Redeem YT_S
+                </Button>
+              </RequireSiweAuth>
+            </div>
+          </div>
         </Card>
       </div>
+
+      <p className="font-urbanist text-xs text-zinc-500">
+        Vault share redemption (`slashDXTZ`/`slashSXTZ`) is anytime. PT/YT redemption becomes claimable after settlement/maturity.
+      </p>
 
       <Card className="rounded-3xl border-zinc-800/80 bg-zinc-900/60 p-6 backdrop-blur-xl">
         <div className="mb-3 flex items-center justify-between">
