@@ -15,7 +15,7 @@ export function HomeFooterSection() {
     <section className="relative min-h-[100svh] snap-start overflow-hidden bg-zinc-950 font-urbanist">
       <div className="pointer-events-none absolute inset-0 opacity-40 [background:radial-gradient(circle_at_12%_18%,rgba(255,94,0,0.2),transparent_34%),radial-gradient(circle_at_82%_20%,rgba(168,85,247,0.18),transparent_28%),radial-gradient(circle_at_70%_80%,rgba(255,255,255,0.08),transparent_36%)]" />
       <div className="pointer-events-none absolute inset-0 opacity-25 [background-image:linear-gradient(to_right,rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.06)_1px,transparent_1px);background-size:30px_30px]" />
-      <p className="pointer-events-none absolute left-1/2 top-10 -translate-x-1/2 font-cinzel text-[10vw] font-bold tracking-[0.2em] text-white/[0.06] sm:text-[9vw]">
+      <p className="pointer-events-none absolute left-1/2 top-10 -translate-x-1/2 font-cinzel text-[10vw] font-bold tracking-[0.2em] text-white/[0.04] sm:text-[9vw]">
         SLASHMARKET
       </p>
 
