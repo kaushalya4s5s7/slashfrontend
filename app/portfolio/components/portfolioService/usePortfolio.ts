@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useAccount, useReadContract, useWriteContract } from "wagmi";
 import { parseAbiItem } from "viem";
 import { ADDRESSES } from "@/shared/hooks/useContractAddresses";
-import { ERC20_ABI, ORACLE_ABI, VAULT_ABI } from "@/shared/lib/abis";
+import { ERC20_ABI, ORACLE_ABI, VAULT_ABI, YT_ABI } from "@/shared/lib/abis";
 import { usePublicClient } from "wagmi";
 
 export type PortfolioActivity = {
@@ -98,6 +98,22 @@ export function usePortfolio() {
     abi: ORACLE_ABI,
     functionName: "currentAPYBps",
     query: { refetchInterval: 15_000 },
+  });
+
+  const claimableYtD = useReadContract({
+    address: ADDRESSES.YT_D,
+    abi: YT_ABI,
+    functionName: "claimableYield",
+    args: address ? [address] : undefined,
+    ...common,
+  });
+
+  const claimableYtS = useReadContract({
+    address: ADDRESSES.YT_S,
+    abi: YT_ABI,
+    functionName: "claimableYield",
+    args: address ? [address] : undefined,
+    ...common,
   });
 
   useEffect(() => {
@@ -227,20 +243,34 @@ export function usePortfolio() {
     const available = balances.slashD + balances.slashS;
     const locked = balances.ptD + balances.ytD + balances.ptS + balances.ytS;
 
+    // Approximate underlying exposure per mode:
+    // - direct slash balance contributes 1:1
+    // - split position contributes roughly one notional leg (PT or YT), not both
+    const delegationNotional =
+      balances.slashD + (balances.ptD > balances.ytD ? balances.ptD : balances.ytD);
+    const stakingNotional =
+      balances.slashS + (balances.ptS > balances.ytS ? balances.ptS : balances.ytS);
+
     const dailyYield =
-      ((balances.slashD * apyDelegation + balances.slashS * apyStaking) / BPS) /
+      ((delegationNotional * apyDelegation + stakingNotional * apyStaking) / BPS) /
       DAYS;
 
     const monthlyYield = dailyYield * 30n;
+    const claimableYield =
+      ((claimableYtD.data as bigint | undefined) ?? 0n) +
+      ((claimableYtS.data as bigint | undefined) ?? 0n);
 
     return {
       available,
       locked,
       dailyYield,
       monthlyYield,
+      claimableYield,
+      delegationNotional,
+      stakingNotional,
       total: available + locked,
     };
-  }, [balances, apyDelegation, apyStaking]);
+  }, [balances, apyDelegation, apyStaking, claimableYtD.data, claimableYtS.data]);
 
   const redeem = async (vault: "D" | "S", shares: bigint) => {
     const address = vault === "D" ? ADDRESSES.VAULT_D : ADDRESSES.VAULT_S;

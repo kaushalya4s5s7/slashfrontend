@@ -24,6 +24,7 @@ export function PortfolioPanel() {
   const { slashD, slashS, ptD, ytD, ptS, ytS } = balances;
   const totalDelegation = slashD + ptD + ytD;
   const totalStaking = slashS + ptS + ytS;
+  const totalYt = ytD + ytS;
 
   const projectionData = useMemo(() => {
     const daily = Number(metrics.dailyYield) / 1e18;
@@ -53,7 +54,7 @@ export function PortfolioPanel() {
           <p className="font-urbanist mt-1 text-xs text-zinc-400">PT + YT positions</p>
         </Card>
         <Card className="rounded-2xl border-zinc-800/80 bg-zinc-900/55 p-5 backdrop-blur-xl">
-          <p className="font-urbanist text-xs uppercase tracking-[0.18em] text-zinc-500">Yield accrued / day</p>
+          <p className="font-urbanist text-xs uppercase tracking-[0.18em] text-zinc-500">Estimated yield / day</p>
           <p className="mt-2 text-2xl font-semibold tracking-tight text-emerald-300">{formatToken(metrics.dailyYield)}</p>
           <p className="font-urbanist mt-1 text-xs text-zinc-400">~{formatToken(metrics.monthlyYield)} / month</p>
         </Card>
@@ -79,9 +80,16 @@ export function PortfolioPanel() {
           <dl className="mt-4 grid gap-2 text-sm">
             <div className="flex justify-between rounded-lg border border-zinc-800/70 bg-black/20 px-3 py-2"><dt className="text-zinc-400">Delegation APY</dt><dd className="text-zinc-100">{formatBps(apyDelegation)}</dd></div>
             <div className="flex justify-between rounded-lg border border-zinc-800/70 bg-black/20 px-3 py-2"><dt className="text-zinc-400">Staking APY</dt><dd className="text-zinc-100">{formatBps(apyStaking)}</dd></div>
-            <div className="flex justify-between rounded-lg border border-zinc-800/70 bg-black/20 px-3 py-2"><dt className="text-zinc-400">Estimated daily</dt><dd className="text-emerald-300">{formatToken(metrics.dailyYield)}</dd></div>
-            <div className="flex justify-between rounded-lg border border-zinc-800/70 bg-black/20 px-3 py-2"><dt className="text-zinc-400">Estimated monthly</dt><dd className="text-zinc-100">{formatToken(metrics.monthlyYield)}</dd></div>
+            <div className="flex justify-between rounded-lg border border-zinc-800/70 bg-black/20 px-3 py-2"><dt className="text-zinc-400">On-chain YT claimable</dt><dd className="text-emerald-300">{formatToken(metrics.claimableYield, 18, 10)}</dd></div>
+            <div className="flex justify-between rounded-lg border border-zinc-800/70 bg-black/20 px-3 py-2"><dt className="text-zinc-400">Estimated daily</dt><dd className="text-emerald-300">{formatToken(metrics.dailyYield, 18, 10)}</dd></div>
+            <div className="flex justify-between rounded-lg border border-zinc-800/70 bg-black/20 px-3 py-2"><dt className="text-zinc-400">Estimated monthly</dt><dd className="text-zinc-100">{formatToken(metrics.monthlyYield, 18, 10)}</dd></div>
           </dl>
+          {metrics.claimableYield === 0n && totalYt > 0n ? (
+            <p className="font-urbanist mt-3 text-xs text-zinc-500">No YT claimable yet. Yield appears after index updates and accrual time.</p>
+          ) : null}
+          {totalYt === 0n ? (
+            <p className="font-urbanist mt-3 text-xs text-zinc-500">YT claimable tracks only YT holdings. Split deposit to mint YT.</p>
+          ) : null}
         </Card>
       </div>
 

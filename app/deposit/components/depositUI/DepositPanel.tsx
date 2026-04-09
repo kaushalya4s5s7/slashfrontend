@@ -2,9 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
-import { Card } from "@/shared/components/ui/Card";
 import { Tabs } from "@/shared/components/ui/Tabs";
-import { Input } from "@/shared/components/ui/Input";
 import { Button } from "@/shared/components/ui/Button";
 import { Badge } from "@/shared/components/ui/Badge";
 import { useDeposit } from "@/app/deposit/components/depositService/useDeposit";
@@ -127,8 +125,8 @@ export function DepositPanel() {
   const isBusy = isPending || isAutoWritePending;
 
   return (
-    <div className="grid gap-5">
-      <Card className="rounded-3xl border-zinc-800/80 bg-zinc-900/60 p-6 backdrop-blur-xl">
+    <div className="mx-auto w-full max-w-2xl">
+      <div className="rounded-[2rem] border border-zinc-800/80 bg-zinc-900/60 p-5 shadow-[0_30px_80px_-35px_rgba(0,0,0,0.95)] backdrop-blur-xl sm:p-6">
         <div className="mb-5 flex items-start justify-between gap-3">
           <div>
             <h2 className="text-xl font-semibold tracking-tight text-zinc-100">Deposit native XTZ</h2>
@@ -146,19 +144,24 @@ export function DepositPanel() {
           ]}
         />
 
-        <div className="mt-5 grid gap-4">
-          <Input
-            label="Amount"
-            suffix="XTZ"
-            type="number"
-            min="0"
-            step="0.001"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            className="h-11 rounded-xl"
-          />
+        <div className="mt-5 space-y-3">
+          <div className="rounded-[1.6rem] border border-zinc-800/80 bg-zinc-950/85 p-5">
+            <p className="font-urbanist mb-3 text-xs uppercase tracking-[0.16em] text-zinc-500">Deposit</p>
+            <div className="flex items-end justify-between gap-3">
+              <input
+                className="w-full bg-transparent text-4xl leading-none text-zinc-200 outline-none placeholder:text-zinc-600 sm:text-5xl"
+                type="number"
+                min="0"
+                step="0.001"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                placeholder="0"
+              />
+              <span className="rounded-full border border-zinc-700/80 bg-zinc-900 px-4 py-2 text-sm font-semibold text-zinc-200">XTZ</span>
+            </div>
+          </div>
 
-          <div className="grid gap-2 rounded-2xl border border-zinc-800/80 bg-black/20 p-4 text-sm text-zinc-300 sm:grid-cols-2">
+          <div className="grid gap-2 rounded-[1.4rem] border border-zinc-800/80 bg-zinc-900/65 p-4 text-sm text-zinc-300 sm:grid-cols-2">
             <p>Oracle APY: <span className="text-zinc-100">{formatBps(apyBps)}</span></p>
             <p>Preview minted: <span className="text-zinc-100">≈ {amount || "0"} {mode === "DELEGATION" ? "slashDXTZ" : "slashSXTZ"}</span></p>
           </div>
@@ -172,19 +175,20 @@ export function DepositPanel() {
             Auto-split after deposit (approve + splitter flow)
           </label>
         </div>
-      </Card>
 
-      <RequireSiweAuth>
-        <div className="space-y-2">
-          <Button onClick={onDeposit} loading={isBusy} className="h-11 w-full rounded-none bg-white text-zinc-950">
+        <RequireSiweAuth>
+          <div className="mt-5 space-y-2">
+            <Button onClick={onDeposit} loading={isBusy} className="h-12 w-full text-base font-semibold text-zinc-950">
             Deposit
-          </Button>
-          {flowError ? <p className="text-xs text-red-400">{flowError}</p> : null}
-          {depositReceipt.data?.status === "success" && !autoSplitEnabled ? (
-            <p className="text-xs text-emerald-400">Deposit confirmed.</p>
-          ) : null}
-        </div>
-      </RequireSiweAuth>
+            </Button>
+            {flowStatus ? <p className="font-urbanist text-xs text-zinc-400">{flowStatus}</p> : null}
+            {flowError ? <p className="font-urbanist text-xs text-red-400">{flowError}</p> : null}
+            {depositReceipt.data?.status === "success" && !autoSplitEnabled ? (
+              <p className="font-urbanist text-xs text-emerald-400">Deposit confirmed.</p>
+            ) : null}
+          </div>
+        </RequireSiweAuth>
+      </div>
     </div>
   );
 }

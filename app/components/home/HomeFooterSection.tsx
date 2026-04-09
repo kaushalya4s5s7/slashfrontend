@@ -8,6 +8,9 @@ const footerLinks = [
 ];
 
 export function HomeFooterSection() {
+  const poweredByImage =
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSvj5CRlqZQk2Q587Qd1QEqxjjzYy4wIuDR6g&s";
+
   return (
     <section className="relative min-h-[100svh] snap-start overflow-hidden bg-black font-urbanist ">
       <div className="pointer-events-none absolute inset-0 opacity-30 [background-image:linear-gradient(to_right,rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.06)_1px,transparent_1px);background-size:28px_28px]" />
@@ -46,9 +49,19 @@ export function HomeFooterSection() {
             <p className="mt-3 text-sm text-zinc-400">Etherlink Shadownet · Tezos-native strategy intelligence.</p>
           </div>
         </div>
+       
 
-        <div className="border-t border-zinc-900 pt-4 text-xs text-zinc-500">
-          © {new Date().getFullYear()} SlashMarket — Autonomous governance, human-readable proof.
+        <div className="border-t border-zinc-900 pt-4">
+          <div className="flex flex-wrap items-center gap-3 text-xs text-zinc-500">
+            <span className="text-[20px]  tracking-[0.12em] text-zinc-500">Built On</span>
+            <a href={poweredByImage} target="_blank" rel="noreferrer" className="inline-flex items-center">
+              <img
+                src={poweredByImage}
+                alt="Powered by"
+                className="h-5 w-auto rounded-md border border-zinc-800/80 object-contain sm:h-10"
+              />
+            </a>
+          </div>
         </div>
       </div>
     </section>
