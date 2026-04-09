@@ -14,6 +14,57 @@ export type PlatformAgent = {
   stakingScore: bigint;
 };
 
+type WinnerDeclaration = {
+  roundId: bigint;
+  winner: `0x${string}`;
+  baker: string;
+  predictedYieldBps: bigint;
+  actualYieldBps: bigint;
+  absError: bigint;
+  reasonHash: `0x${string}`;
+  reasonSummary: string;
+  reward: bigint;
+  declaredAt: bigint;
+};
+
+function normalizeWinnerResult(raw: unknown): WinnerDeclaration | null {
+  if (!raw) return null;
+
+  if (Array.isArray(raw)) {
+    if (raw.length < 10) return null;
+    return {
+      roundId: (raw[0] as bigint) ?? 0n,
+      winner: ((raw[1] as `0x${string}`) ?? zeroAddress),
+      baker: (raw[2] as string) ?? "",
+      predictedYieldBps: (raw[3] as bigint) ?? 0n,
+      actualYieldBps: (raw[4] as bigint) ?? 0n,
+      absError: (raw[5] as bigint) ?? 0n,
+      reasonHash: ((raw[6] as `0x${string}`) ?? zeroAddress),
+      reasonSummary: (raw[7] as string) ?? "",
+      reward: (raw[8] as bigint) ?? 0n,
+      declaredAt: (raw[9] as bigint) ?? 0n,
+    };
+  }
+
+  if (typeof raw === "object") {
+    const obj = raw as Partial<WinnerDeclaration>;
+    return {
+      roundId: obj.roundId ?? 0n,
+      winner: obj.winner ?? zeroAddress,
+      baker: obj.baker ?? "",
+      predictedYieldBps: obj.predictedYieldBps ?? 0n,
+      actualYieldBps: obj.actualYieldBps ?? 0n,
+      absError: obj.absError ?? 0n,
+      reasonHash: obj.reasonHash ?? zeroAddress,
+      reasonSummary: obj.reasonSummary ?? "",
+      reward: obj.reward ?? 0n,
+      declaredAt: obj.declaredAt ?? 0n,
+    };
+  }
+
+  return null;
+}
+
 export function useAgents() {
   const round = useReadContract({
     address: ADDRESSES.COMP_D,
@@ -41,7 +92,7 @@ export function useAgents() {
     if (!current || current <= 1n) return [] as bigint[];
 
     const from = current - 1n;
-    const lookback = 12n;
+    const lookback = 120n;
     const to = from > lookback ? from - lookback + 1n : 1n;
 
     const rounds: bigint[] = [];
@@ -67,15 +118,12 @@ export function useAgents() {
     if (!data?.length) return null;
 
     for (let i = 0; i < data.length; i++) {
-      const entry = data[i] as
-        | { result?: { winner?: `0x${string}`; declaredAt?: bigint } }
-        | { winner?: `0x${string}`; declaredAt?: bigint }
-        | undefined;
-
-      const result =
+      const entry = data[i] as { result?: unknown } | unknown;
+      const rawResult =
         entry && typeof entry === "object" && "result" in entry
-          ? entry.result
-          : (entry as { winner?: `0x${string}`; declaredAt?: bigint } | undefined);
+          ? (entry as { result?: unknown }).result
+          : entry;
+      const result = normalizeWinnerResult(rawResult);
 
       if (!result) continue;
       if (!result.winner || result.winner === zeroAddress) continue;
@@ -83,7 +131,7 @@ export function useAgents() {
 
       return {
         round: winnerRounds[i],
-        winner: result as NonNullable<typeof result>,
+        winner: result,
       };
     }
 

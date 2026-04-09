@@ -350,7 +350,7 @@ export function PortfolioPanel() {
       </div>
 
       <p className="font-urbanist text-xs text-zinc-500">
-        Vault share redemption (`slashDXTZ`/`slashSXTZ`) is anytime. PT/YT redemption becomes claimable after settlement/maturity.
+        Vault redeem burns `slashDXTZ`/`slashSXTZ` and pays native XTZ to your wallet in the same tx. Net wallet increase = redeemed XTZ minus gas. PT/YT redemption becomes claimable only after settlement/maturity.
       </p>
 
       <Card className="rounded-3xl border-zinc-800/80 bg-zinc-900/60 p-6 backdrop-blur-xl">
