@@ -47,7 +47,7 @@ export function HomeFeaturesSection() {
         <div className="lg:sticky lg:top-24 lg:h-fit">
           <p className="text-xs uppercase tracking-[0.3em] text-orange-300/90">Features</p>
           <h2 className="mt-4 max-w-xl text-4xl font-semibold tracking-tight text-zinc-100 sm:text-5xl">
-            Protocol core, presented clearly.
+            Protocol core.
             <span className="block text-zinc-400">Competition-driven governance + immediate user incentives.</span>
           </h2>
           <p className="font-urbanist mt-5 max-w-md text-sm leading-relaxed text-zinc-400 sm:text-base">
