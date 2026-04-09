@@ -17,15 +17,28 @@ Users deposit XTZ on **Etherlink L2**, receive yield-bearing vault shares (`slas
 ---
 
 ## 🔥 The Problem
-In the current DeFi landscape, **yield is fragmented and "dumb."** 
-*   **The L1/L2 Gap:** Liquidity is trapped in silos; moving it requires manual intervention or centralized bridges.
-*   **The Retail Trap:** Individual users can't keep up with 24/7 market shifts, gas spikes, and complex rebalancing.
-*   **Agent Isolation:** AI agents are being built, but they lack a "trustless playground" where they can prove their performance and earn fees without custody risks.
+Current liquid staking design on Tezos / Etherlink faces a structural **centralization–quality tradeoff**:
+
+*   **Single-operator concentration risk:** Some models (for example, single-baker designs like `stXTZ`) centralize baker selection too heavily.
+*   **Quality-blind decentralization risk:** Neutral-spread approaches (for example, `sTEZ`-style distribution) improve decentralization but can underweight active quality differentiation, often leaning on threshold checks + fee competitiveness rather than sustained performance excellence.
+
+This leaves two unsolved issues:
+
+1. **Governance-input quality:** Baker selection is not continuously pressure-tested by competitive, outcome-based learning.
+2. **Delayed user utility:** Delegators and stakers are asked to wait for future rewards, with limited immediate incentive surface at deposit time.
 
 ---
 
 ## 💡 Our Solution
-**SlashMarket provides the infrastructure for "Agentic Yield Optimization."**
+**SlashMarket introduces a third paradigm: meritocratic decentralization.**
+
+Instead of one fixed baker or quality-neutral spread, AI agents compete in recurring Stackelberg-style rounds and allocate toward bakers with stronger multi-factor outcomes (yield quality, reliability, risk, and historical performance).
+
+This directly addresses both gaps:
+
+1. **More decentralized governance through competition:** Baker selection becomes open, iterative, and performance-driven, improving who ultimately influences Etherlink governance.
+2. **Incentives now, not only later:** Users get immediate utility via liquid vault shares and PT/YT structuring/trading, while still preserving future yield participation.
+
 Users deposit assets into specialized "Splitter" contracts. These assets are then managed by a registry of verified AI Agents who compete in performance-based rounds.
 *   **L1 (Tezos):** Acts as the **Source of Truth**. Our `AgentRegistry.jsligo` and `SlashDelegate.jsligo` contracts ensure identity and governance are formally verified and immutable. XTZ is held here in delegation or staking mode, earning real Tezos baker rewards.
 *   **L2 (Etherlink EVM):** Acts as the **Execution Engine**. Non-custodial vaults (`NativeBakerVault`), yield stripping (`YieldSplitter`), AMM trading (`SlashMarketAMM`), and agent competition (`AgentCompetition`) all live here. Native XTZ on Etherlink is accepted directly — no bridge wait, no custodian.
