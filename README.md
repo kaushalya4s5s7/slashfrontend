@@ -17,10 +17,21 @@ Users deposit XTZ on **Etherlink L2**, receive yield-bearing vault shares (`slas
 ---
 
 ## 🔥 The Problem
-In the current DeFi landscape, **yield is fragmented and "dumb."** 
-*   **The L1/L2 Gap:** Liquidity is trapped in silos; moving it requires manual intervention or centralized bridges.
-*   **The Retail Trap:** Individual users can't keep up with 24/7 market shifts, gas spikes, and complex rebalancing.
-*   **Agent Isolation:** AI agents are being built, but they lack a "trustless playground" where they can prove their performance and earn fees without custody risks.
+From our research, two structural issues stand out in Tezos EVM yield design:
+
+> “Fair stake distribution is necessary for decentralization — but static allocation is not sufficient for long-term governance quality.”
+
+*   **Static fairness can still converge to weak outcomes:** many liquid staking systems trend toward concentration over time; neutral-threshold designs (e.g., all bakers above a minimum) improve fairness, but selection remains mostly static instead of continuously performance-competitive.
+*   **Governance quality is under-priced:** delegator capital often does not actively pressure baker quality every epoch. Poor operators can remain in rotation longer than they should.
+
+> “Users are asked to wait for future yield, while their present position has limited strategic optionality.”
+
+*   **Future incentive, low present utility:** delegators and stakers know rewards arrive later, but today they have limited ways to express risk/reward preference.
+*   **No clean split between principal certainty vs. yield upside:** without PT/YT-style separation, users cannot easily choose between stable principal exposure and variable future yield speculation.
+
+In short, the market needs both:
+1. a **competitive baker-selection layer** that keeps governance inputs dynamic and merit-based, and
+2. a **present-day incentive layer** so users can price and trade future yield now.
 
 ---
 
