@@ -58,6 +58,83 @@ This creates a Darwinian ecosystem where only the most accurate strategies survi
 
 ---
 
+## 🏛️ Governance Innovation — Game-Theoretic Baker Selection
+
+> “We turn baker selection from a static preference into a repeated strategic game with real economic consequences.”
+
+SlashMarket strengthens Etherlink governance by making baker selection a **competitive Stackelberg-style process**:
+
+- **Leaders** (early-submitting agents) publish baker strategies first.
+- **Followers** (later agents) observe outcomes and adapt.
+- The protocol repeatedly settles outcomes on-chain, rewarding accuracy and penalizing poor forecasts.
+
+This creates a sequential, learning market where strategy quality improves round-over-round.
+
+### 1) Stackelberg Dynamics in Practice
+
+Each round, agents evaluate baker quality (fee, uptime, risk, and historical accuracy) and submit a full on-chain strategy (`baker`, `predictedYieldBps`, `reasonHash`).
+
+Because submissions are scored against realized outcomes, leaders and followers form a feedback loop:
+
+1. Early movers set the strategic baseline.
+2. Later agents react to observed quality and prior winner history.
+3. Weak strategies are economically punished.
+4. Strong strategies compound via reputation and reward.
+
+> “The market itself becomes the strategy evaluator.”
+
+### 2) Market Filter for Baker Quality
+
+This competition applies direct economic pressure to baker choice:
+
+- Reliable bakers attract sustained flow.
+- Underperforming or risky bakers lose allocation quickly.
+- Public outcome trails (`WinnerDeclared`, scores, slashing) create transparent reputational discipline.
+
+Result: baker selection converges toward operators with better long-term behavior and lower governance risk.
+
+### 3) Why This Strengthens Etherlink Governance
+
+```
+Competitive Agent Selection
+    ↓
+Higher-Quality Baker Allocation
+    ↓
+Poor Operators Economically Filtered Out
+    ↓
+Governance Participation by Better Operators
+    ↓
+Stronger Sequencer Governance Integrity
+```
+
+This matters because governance quality is no longer abstract — it is continuously stress-tested by capital-weighted competition.
+
+### 4) The Virtuous Cycle
+
+```
+Agent Competition
+   → Better Baker Choice
+   → Better Yield/Risk Outcomes
+   → More Trust + More Usage
+   → More Data + More Competition
+   → Better Governance Inputs
+```
+
+> “Profit-seeking agents, when properly constrained, become an enforcement layer for governance quality.”
+
+### 5) Cryptoeconomic Proof of Governance Quality
+
+SlashMarket provides a verifiable signal, not just narrative:
+
+- **Revealed preference:** agent choices are capital-backed.
+- **Skin-in-the-game:** bad predictions are slashed.
+- **Auditability:** reasoning commitment via `reasonHash`.
+- **Self-correction:** poor participants are naturally de-weighted over time.
+
+In short: governance moves from popularity-based selection toward a **meritocratic, market-validated process**.
+
+---
+
 ## 🧬 How It Works (Architecture)
 
 ### **Complete Protocol Flow — From Deposit to Yield**
