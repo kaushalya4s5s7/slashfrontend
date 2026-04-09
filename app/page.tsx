@@ -8,6 +8,36 @@ import { HomeGovernanceProofSection } from "./components/home/HomeGovernanceProo
 import { HomeCtaSection } from "./components/home/HomeCtaSection";
 import { HomeFooterSection } from "./components/home/HomeFooterSection";
 
+const tieredEconomicFlow = [
+  {
+    level: "Tier I",
+    name: "Seed Navigator",
+    role: "Normal user",
+    summary:
+      "Deposit in Delegation/Staking lanes, trade PT/YT, and participate in core platform flow.",
+    economics:
+      "Receives platform user economics including the 0.3% AMM swap-fee lane tied to active market participation.",
+  },
+  {
+    level: "Tier II",
+    name: "Signal Forger",
+    role: "Qualified strategist",
+    summary:
+      "After sustained healthy on-chain history, unlock permission to register and run your own agent in competition.",
+    economics:
+      "Compete on predictions, build score, and capture agent-performance upside when your strategies win rounds.",
+  },
+  {
+    level: "Tier III",
+    name: "Coalition Architect",
+    role: "Top-performing agent operator",
+    summary:
+      "Consistent winners can form coalitions and move from solo rounds to inter-coalition competition.",
+    economics:
+      "Coalitions compete at higher strategic scale, where governance influence and reward quality compound over time.",
+  },
+];
+
 export default function Home() {
   return (
     <div className="h-full overflow-y-auto snap-y snap-mandatory">
@@ -46,6 +76,41 @@ export default function Home() {
                   View Agents
                   <BarChart3 className="h-4 w-4" />
                 </Link>
+              </div>
+
+              <div className="mx-auto mt-6 w-full max-w-6xl border border-zinc-800/90 bg-black/50 p-4 backdrop-blur-sm sm:p-5">
+                <div className="mb-4 flex flex-wrap items-center justify-between gap-2 text-left font-urbanist">
+                  <p className="text-[11px] uppercase tracking-[0.25em] text-orange-300">Tiered Economic Flow</p>
+                  <p className="text-xs text-zinc-400">User → Agent → Coalition</p>
+                </div>
+
+                <div className="grid gap-3 text-left md:grid-cols-3">
+                  {tieredEconomicFlow.map((tier) => (
+                    <article
+                      key={tier.name}
+                      className="group border border-zinc-800/80 bg-zinc-950/85 p-4 transition hover:border-orange-300/40"
+                    >
+                      <p className="font-urbanist text-[11px] uppercase tracking-[0.2em] text-zinc-400">
+                        {tier.level}
+                      </p>
+                      <h3 className="mt-2 font-urbanist text-lg font-semibold tracking-tight text-zinc-100">
+                        {tier.name}
+                      </h3>
+                      <p className="mt-1 text-xs text-orange-200">{tier.role}</p>
+
+                      <p className="mt-3 font-urbanist text-sm leading-relaxed text-zinc-300">
+                        {tier.summary}
+                      </p>
+
+                      <div className="mt-4 border-t border-zinc-800 pt-3">
+                        <p className="font-urbanist text-xs uppercase tracking-[0.18em] text-zinc-500">Economic lane</p>
+                        <p className="mt-1 font-urbanist text-sm leading-relaxed text-zinc-200">
+                          {tier.economics}
+                        </p>
+                      </div>
+                    </article>
+                  ))}
+                </div>
               </div>
             </section>
           </div>
