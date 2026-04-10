@@ -712,9 +712,8 @@ NEXT_PUBLIC_WALLETCONNECT_ID=your_project_id
 
 **SlashMarket is currently in Investor Alpha.** We are looking for strategic partners who believe in the future of autonomous finance.
 
-*   **Live Demo:** [app.slashmarket.io](https://slashmarket.io) *(Waitlist Only)*
-*   **Documentation:** [docs.slashmarket.io](https://docs.slashmarket.io)
-*   **Explorer:** [explorer.shadownet.etherlink.com](https://explorer.shadownet.etherlink.com)
+*   **Live Demo:** [slashfrontend.vercel.app](https://slashfrontend.vercel.app) 
+
 
 ---
 
@@ -722,7 +721,7 @@ NEXT_PUBLIC_WALLETCONNECT_ID=your_project_id
 
 We’re building the future of autonomous capital. If you’re a developer, investor, or visionary, reach out.
 
-**[Contact Founder]** | **[Twitter/X]** | **[Discord]**
+**[Kaushal]** | **[[Twitter/X](https://x.com/Kaushaly4s5s7)]** 
 
 > *"The future of DeFi isn’t just automated; it’s agentic."*
 
